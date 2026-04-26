@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTT Soliq Tushumlari Dashboard - Professional v2</title>
+    <title>YTT Soliq Tushumlari Dashboard - Professional</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -175,10 +175,7 @@
         }
         td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
         tbody tr:hover { background: #f8f9fa; }
-        .highlight { background: #fffbea; font-weight: 600; }
-        .relevance { font-size: 10px; color: #27ae60; font-weight: 600; }
         
-        /* FOOTER */
         .footer {
             text-align: center;
             padding: 30px;
@@ -191,13 +188,13 @@
 </head>
 <body>
     <div class="header">
-        <h1>📊 YTT Soliq Tushumlari Dashboard - Professional</h1>
+        <h1>📊 YTT Soliq Tushumlari Dashboard</h1>
         <p>Toshkent shahar • Real-time Soliq tahlili • Advanced Search & Analytics</p>
     </div>
     
     <div class="nav-tabs">
         <button class="nav-tab active" data-page="home">📈 Asosiy oyna</button>
-        <button class="nav-tab" data-page="search">🔍 Qidiruv (JSHSHIR/FISH)</button>
+        <button class="nav-tab" data-page="search">🔍 Qidiruv</button>
         <button class="nav-tab" data-page="ranking">🏆 Reytingi</button>
         <button class="nav-tab" data-page="dynamics">📉 Dinamika</button>
     </div>
@@ -293,17 +290,17 @@
             
             <div class="slicer-box" style="max-width: 100%; margin-bottom: 20px;">
                 <div class="slicer-label">👤 FISH (Familiya Ism Sharif) bo'yicha qidiruv</div>
-                <input type="text" id="fishSearch" placeholder="Masalan: RADKEVICH MARIYA yoki imloviy xato">
+                <input type="text" id="fishSearch" placeholder="Masalan: RADKEVICH MARIYA">
             </div>
             
             <div class="chart-container">
                 <div class="chart-title">🔎 Qidiruv Natijalari</div>
                 <table>
                     <thead>
-                        <tr><th>JSHSHIR</th><th>FIO</th><th>Soliq Kodi</th><th>NAC</th><th>UPL</th><th>Match %</th></tr>
+                        <tr><th>JSHSHIR</th><th>FIO</th><th>Soliq Kodi</th><th>NAC</th><th>UPL</th></tr>
                     </thead>
                     <tbody id="search-results">
-                        <tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko'rsatiladi...</td></tr>
+                        <tr><td colspan="5" style="text-align:center">Qidiruv natijasi ko'rsatiladi...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -336,18 +333,18 @@
     </div>
     
     <div class="footer">
-        🔒 Privacy: JSHSHIR anonymized • 🔍 Fuzzy search: Typo-tolerant • 💰 Real-time KPI • 🛠 Tech: Papa Parse + Chart.js
+        🔒 Privacy: JSHSHIR anonymized • 🔍 Search: JSHSHIR + FISH • 💰 Real-time KPI • 🛠 Tech: Papa Parse + Chart.js
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
     
     <script>
         const MONTHS = ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
         let allData = [];
         let uniqueData = [];
         let districts = [];
+        let chartInstances = {};
         
         // TAB NAVIGATION
         document.querySelectorAll('.nav-tab').forEach(tab => {
@@ -477,9 +474,16 @@
             
             const trend = MONTHS.map((_, i) => (monthlyData[i+1] / 1e9).toFixed(2));
             
+            // Destroy existing charts safely
+            if (chartInstances.trend) {
+                chartInstances.trend.destroy();
+            }
+            if (chartInstances.dynamics) {
+                chartInstances.dynamics.destroy();
+            }
+            
             const ctx1 = document.getElementById('trendChart');
-            if (window.trendChart) window.trendChart.destroy();
-            window.trendChart = new Chart(ctx1, {
+            chartInstances.trend = new Chart(ctx1, {
                 type: 'line',
                 data: {
                     labels: MONTHS,
@@ -503,8 +507,7 @@
             });
             
             const ctx2 = document.getElementById('dynamicsChart');
-            if (window.dynamicsChart) window.dynamicsChart.destroy();
-            window.dynamicsChart = new Chart(ctx2, {
+            chartInstances.dynamics = new Chart(ctx2, {
                 type: 'bar',
                 data: {
                     labels: MONTHS,
@@ -527,7 +530,7 @@
         function searchByJshshir() {
             const query = document.getElementById('jshshirSearch').value.toLowerCase();
             if (!query) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
                 return;
             }
             
@@ -538,41 +541,36 @@
         function searchByFish() {
             const query = document.getElementById('fishSearch').value.toLowerCase();
             if (!query) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
                 return;
             }
             
-            const fuse = new Fuse(uniqueData, {
-                keys: ['FAMILIYA', 'ISM', 'SHARIF'],
-                threshold: 0.4,
-                includeScore: true
+            const results = uniqueData.filter(d => {
+                const fio = `${d.FAMILIYA || ''} ${d.ISM || ''} ${d.SHARIF || ''}`.toLowerCase();
+                return fio.includes(query);
             });
             
-            const results = fuse.search(query).map(r => ({ ...r.item, matchScore: r.score }));
             renderSearchResults(results);
         }
         
         function renderSearchResults(results) {
             if (results.length === 0) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Natija topilmadi</td></tr>';
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Natija topilmadi</td></tr>';
                 return;
             }
             
             document.getElementById('search-results').innerHTML = results.slice(0, 50).map(d => {
                 const fio = `${d.FAMILIYA || '—'} ${d.ISM || '—'} ${d.SHARIF || '—'}`.trim();
-                const nac = (parseFloat(d.NAC) || 0 / 1e9).toFixed(2);
-                const upl = (parseFloat(d.UPL) || 0 / 1e9).toFixed(2);
-                const match = d.matchScore ? ((100 * (1 - d.matchScore)).toFixed(0)) : '100';
-                return `<tr><td>${d.JSHSHIR}</td><td>${fio}</td><td>${d.SOLIQ_KODI}</td><td>${nac}</td><td>${upl}</td><td class="relevance">${match}%</td></tr>`;
+                const nac = ((parseFloat(d.NAC) || 0) / 1e9).toFixed(3);
+                const upl = ((parseFloat(d.UPL) || 0) / 1e9).toFixed(3);
+                return `<tr><td>${d.JSHSHIR}</td><td>${fio}</td><td>${d.SOLIQ_KODI || '—'}</td><td>${nac}</td><td>${upl}</td></tr>`;
             }).join('');
         }
         
         function simulateRealtimeKPI() {
-            const today = new Date().getDate();
-            let todayValue = 0.1 + (Math.random() * 0.5);
-            
-            const interval = setInterval(() => {
-                todayValue += (Math.random() * 0.02);
+            let todayValue = 0.1;
+            setInterval(() => {
+                todayValue += (Math.random() * 0.05);
                 document.getElementById('realtime-today').textContent = todayValue.toFixed(2);
             }, 3000);
         }
