@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTT Soliq Tushumlari Dashboard - Professional</title>
+    <title>YTT Soliq Tushumlari Dashboard</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -16,10 +16,10 @@
             background: linear-gradient(135deg, #0C447C 0%, #1B4F8C 100%);
             color: white;
             padding: 25px 40px;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
-        .header h1 { font-size: 32px; margin: 0; font-weight: 700; }
-        .header p { font-size: 13px; margin: 6px 0 0; opacity: 0.9; }
+        .header h1 { font-size: 32px; margin: 0; font-weight: 700; letter-spacing: -0.5px; }
+        .header p { font-size: 13px; margin: 6px 0 0; opacity: 0.85; }
         .nav-tabs {
             background: #1B4F8C;
             display: flex;
@@ -29,7 +29,7 @@
         }
         .nav-tab {
             padding: 16px 24px;
-            color: rgba(255,255,255,0.7);
+            color: rgba(255,255,255,0.6);
             border: none;
             background: transparent;
             cursor: pointer;
@@ -38,7 +38,7 @@
             border-bottom: 4px solid transparent;
             transition: all 0.3s;
         }
-        .nav-tab:hover { color: white; }
+        .nav-tab:hover { color: white; transform: translateY(-2px); }
         .nav-tab.active { color: white; border-bottom-color: #FFD700; }
         .container { max-width: 1400px; margin: 0 auto; padding: 40px; }
         .status {
@@ -49,42 +49,55 @@
             text-align: center;
             font-weight: 500;
             color: #666;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         .status.error { background: #ffe0e0; color: #c00; }
         .page { display: none; }
-        .page.active { display: block; }
+        .page.active { display: block; animation: fadeIn 0.3s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
         /* REAL-TIME KPI */
         .realtime-kpi {
             background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
             color: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 35px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 16px rgba(39, 174, 96, 0.3);
+            box-shadow: 0 10px 25px rgba(39, 174, 96, 0.3);
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+        .realtime-kpi::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+            animation: movePattern 20s linear infinite;
+        }
+        @keyframes movePattern { 0% { transform: translate(0, 0); } 100% { transform: translate(40px, 40px); } }
+        .realtime-content { position: relative; z-index: 1; }
         .realtime-label {
             font-size: 13px;
             text-transform: uppercase;
             opacity: 0.9;
-            margin-bottom: 8px;
-            font-weight: 600;
-            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
         }
         .realtime-value {
-            font-size: 48px;
-            font-weight: 700;
+            font-size: 52px;
+            font-weight: 800;
             line-height: 1;
             margin-bottom: 8px;
             animation: pulse 2s infinite;
         }
-        .realtime-sub {
-            font-size: 13px;
-            opacity: 0.9;
-        }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        .realtime-sub { font-size: 13px; opacity: 0.85; font-weight: 500; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.9; transform: scale(1.02); } }
         
         /* SLICERS */
         .slicers {
@@ -96,100 +109,138 @@
         .slicer-box {
             background: white;
             border-radius: 10px;
-            padding: 18px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 2px solid #f0f0f0;
+            transition: all 0.3s;
         }
+        .slicer-box:hover { box-shadow: 0 4px 15px rgba(0,0,0,0.12); border-color: #1B4F8C; }
         .slicer-label {
             font-size: 12px;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
             color: #1B4F8C;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
         }
         input[type="text"], select {
             width: 100%;
-            padding: 12px;
+            padding: 12px 14px;
             border: 2px solid #e0e6ed;
             border-radius: 6px;
             font-size: 13px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
-        input[type="text"]:focus, select:focus { border-color: #1B4F8C; outline: none; }
+        input[type="text"]:focus, select:focus {
+            border-color: #1B4F8C;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(27, 79, 140, 0.1);
+        }
         
         /* KPI GRID */
         .kpi-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 18px;
             margin-bottom: 30px;
         }
         .kpi-card {
             background: white;
-            border-radius: 10px;
-            padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 26px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
             border-left: 5px solid #1B4F8C;
+            transition: all 0.3s;
         }
+        .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
         .kpi-label {
             font-size: 11px;
             text-transform: uppercase;
-            font-weight: 600;
+            font-weight: 700;
             color: #7f8c8d;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            letter-spacing: 0.8px;
         }
-        .kpi-value { font-size: 32px; font-weight: 700; color: #1B4F8C; line-height: 1; }
+        .kpi-value { font-size: 36px; font-weight: 800; color: #1B4F8C; line-height: 1; }
+        .kpi-unit { font-size: 12px; color: #95a5a6; margin-top: 6px; font-weight: 500; }
         
         /* CHARTS */
         .chart-container {
             background: white;
-            border-radius: 10px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 28px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border: 1px solid #f0f0f0;
         }
         .chart-title {
-            font-size: 15px;
+            font-size: 16px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 18px;
             color: #1B4F8C;
             border-bottom: 2px solid #ecf0f1;
             padding-bottom: 12px;
+            letter-spacing: -0.3px;
         }
-        .chart-canvas { position: relative; height: 340px; }
+        .chart-canvas { position: relative; height: 360px; }
         
         /* TABLES */
-        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
         thead {
             background: linear-gradient(135deg, #f8f9fa 0%, #e8eaed 100%);
             border-bottom: 2px solid #1B4F8C;
         }
         th {
-            padding: 12px;
+            padding: 14px;
             text-align: left;
             font-weight: 700;
             color: #1B4F8C;
             text-transform: uppercase;
             font-size: 10px;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
-        td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
-        tbody tr:hover { background: #f8f9fa; }
+        td { padding: 13px 14px; border-bottom: 1px solid #ecf0f1; font-weight: 500; }
+        tbody tr:hover { background: #f9fafb; }
         
         .footer {
             text-align: center;
-            padding: 30px;
+            padding: 35px;
             color: #7f8c8d;
-            font-size: 11px;
-            margin-top: 40px;
+            font-size: 12px;
+            margin-top: 50px;
             border-top: 2px solid #ecf0f1;
+            font-weight: 500;
+            letter-spacing: 0.5px;
         }
+        
+        .legend {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .legend-color {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+        }
+        .planned-color { background: #95a5a6; }
+        .actual-color { background: #27ae60; }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>📊 YTT Soliq Tushumlari Dashboard</h1>
-        <p>Toshkent shahar • Real-time Soliq tahlili • Advanced Search & Analytics</p>
+        <p>Toshkent shahar • Real-time Soliq tahlili • Advanced Analytics</p>
     </div>
     
     <div class="nav-tabs">
@@ -206,9 +257,11 @@
         <div class="page active" id="home">
             <!-- REAL-TIME KPI -->
             <div class="realtime-kpi">
-                <div class="realtime-label">💰 BUGUN TUSHGAN PUL (Real-time)</div>
-                <div class="realtime-value" id="realtime-today">—</div>
-                <div class="realtime-sub">mlrd so'm • Live update</div>
+                <div class="realtime-content">
+                    <div class="realtime-label">💰 BUGUN TUSHGAN PUL (Real-time)</div>
+                    <div class="realtime-value" id="realtime-today">—</div>
+                    <div class="realtime-sub">mlrd so'm • Live update har 5 sekundda</div>
+                </div>
             </div>
             
             <!-- SLICERS -->
@@ -242,26 +295,40 @@
             <!-- KPI CARDS -->
             <div class="kpi-grid">
                 <div class="kpi-card">
-                    <div class="kpi-label">Kutilayotgan</div>
+                    <div class="kpi-label">📋 Kutilayotgan (Planned)</div>
                     <div class="kpi-value" id="kpi-planned">—</div>
+                    <div class="kpi-unit">mlrd so'm</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Real Tushum</div>
+                    <div class="kpi-label">💵 Real Tushum (Actual)</div>
                     <div class="kpi-value" id="kpi-actual">—</div>
+                    <div class="kpi-unit">mlrd so'm</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">Yig'ilish %</div>
+                    <div class="kpi-label">📊 Yig'ilish Foizi</div>
                     <div class="kpi-value" id="kpi-percent">—</div>
+                    <div class="kpi-unit">%</div>
                 </div>
                 <div class="kpi-card">
-                    <div class="kpi-label">YTT Sonix</div>
+                    <div class="kpi-label">📍 YTT Sonix</div>
                     <div class="kpi-value" id="kpi-count">—</div>
+                    <div class="kpi-unit">ta</div>
                 </div>
             </div>
             
-            <!-- TREND CHART -->
+            <!-- TREND CHART (2 LINES) -->
             <div class="chart-container">
-                <div class="chart-title">📈 12 Oylik Trend</div>
+                <div class="chart-title">📈 12 Oylik Trend: Kutilayotgan vs Real</div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color planned-color"></div>
+                        <span>Kutilayotgan (NAC)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color actual-color"></div>
+                        <span>Real Tushum (UPL)</span>
+                    </div>
+                </div>
                 <div class="chart-canvas">
                     <canvas id="trendChart"></canvas>
                 </div>
@@ -269,10 +336,16 @@
             
             <!-- DISTRICTS TABLE -->
             <div class="chart-container">
-                <div class="chart-title">🏢 Tumanlar bo'yicha</div>
+                <div class="chart-title">🏢 Tumanlar bo'yicha Soliq Tushumlari</div>
                 <table>
                     <thead>
-                        <tr><th>#</th><th>Tuman</th><th>NAC</th><th>UPL</th><th>%</th></tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Tuman</th>
+                            <th>Kutilayotgan</th>
+                            <th>Real</th>
+                            <th>Yig'ilish %</th>
+                        </tr>
                     </thead>
                     <tbody id="districts-table">
                         <tr><td colspan="5" style="text-align:center">Yuklanyapti...</td></tr>
@@ -294,7 +367,7 @@
             </div>
             
             <div class="chart-container">
-                <div class="chart-title">🔎 Qidiruv Natijalari</div>
+                <div class="chart-title">🔎 Qidiruv Natijalari (Real-time)</div>
                 <table>
                     <thead>
                         <tr><th>JSHSHIR</th><th>FIO</th><th>Soliq Kodi</th><th>NAC</th><th>UPL</th></tr>
@@ -309,7 +382,7 @@
         <!-- PAGE 3: REYTINGI -->
         <div class="page" id="ranking">
             <div class="chart-container">
-                <div class="chart-title">🏆 Tumanlar Reytingi</div>
+                <div class="chart-title">🏆 Tumanlar Reytingi (Foiz bo'yicha)</div>
                 <table>
                     <thead>
                         <tr><th>#</th><th>Tuman</th><th>Planned</th><th>Actual</th><th>%</th></tr>
@@ -324,7 +397,7 @@
         <!-- PAGE 4: DINAMIKA -->
         <div class="page" id="dynamics">
             <div class="chart-container">
-                <div class="chart-title">📊 Oylar bo'yicha</div>
+                <div class="chart-title">📊 Oylar bo'yicha Dinamika</div>
                 <div class="chart-canvas">
                     <canvas id="dynamicsChart"></canvas>
                 </div>
@@ -333,7 +406,7 @@
     </div>
     
     <div class="footer">
-        🔒 Privacy: JSHSHIR anonymized • 🔍 Search: JSHSHIR + FISH • 💰 Real-time KPI • 🛠 Tech: Papa Parse + Chart.js
+        © 2026 Toshkent Soliq Hisob-Kutuvchi Boshqarmasi • Real-time Analytics Platform • Privacy Protected
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
@@ -360,9 +433,17 @@
         document.getElementById('districtFilter').addEventListener('change', updateDashboard);
         document.getElementById('monthFilter').addEventListener('change', updateDashboard);
         
-        // SEARCH
-        document.getElementById('jshshirSearch').addEventListener('input', searchByJshshir);
-        document.getElementById('fishSearch').addEventListener('input', searchByFish);
+        // SEARCH (REAL-TIME)
+        document.getElementById('jshshirSearch').addEventListener('input', debounce(searchByJshshir, 300));
+        document.getElementById('fishSearch').addEventListener('input', debounce(searchByFish, 300));
+        
+        function debounce(func, wait) {
+            let timeout;
+            return function() {
+                clearTimeout(timeout);
+                timeout = setTimeout(func, wait);
+            };
+        }
         
         // LOAD CSV
         function loadCSV() {
@@ -450,96 +531,128 @@
                 const p = (d.planned / 1e9).toFixed(2);
                 const a = (d.actual / 1e9).toFixed(2);
                 const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
-                return `<tr><td>${i+1}</td><td>${name}</td><td>${p}</td><td>${a}</td><td>${pct}%</td></tr>`;
+                return `<tr><td>${i+1}</td><td><strong>${name}</strong></td><td>${p}</td><td>${a}</td><td><strong>${pct}%</strong></td></tr>`;
             }).join('');
             
             document.getElementById('ranking-table').innerHTML = sorted.map(([name, d], i) => {
                 const p = (d.planned / 1e9).toFixed(2);
                 const a = (d.actual / 1e9).toFixed(2);
                 const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
-                return `<tr><td>${i+1}</td><td>${name}</td><td>${p}</td><td>${a}</td><td>${pct}%</td></tr>`;
+                return `<tr><td>${i+1}</td><td><strong>${name}</strong></td><td>${p}</td><td>${a}</td><td><strong>${pct}%</strong></td></tr>`;
             }).join('');
         }
         
         function updateCharts(data) {
             const monthlyData = {};
             MONTHS.forEach((m, i) => {
-                monthlyData[i+1] = 0;
+                monthlyData[i+1] = { planned: 0, actual: 0 };
             });
             
             data.forEach(d => {
                 const m = d.MONTH || 1;
-                monthlyData[m] += parseFloat(d.NAC) || 0;
+                monthlyData[m].planned += parseFloat(d.NAC) || 0;
+                monthlyData[m].actual += parseFloat(d.UPL) || 0;
             });
             
-            const trend = MONTHS.map((_, i) => (monthlyData[i+1] / 1e9).toFixed(2));
+            const plannedTrend = MONTHS.map((_, i) => (monthlyData[i+1].planned / 1e9).toFixed(2));
+            const actualTrend = MONTHS.map((_, i) => (monthlyData[i+1].actual / 1e9).toFixed(2));
             
-            // Destroy existing charts safely
-            if (chartInstances.trend) {
-                chartInstances.trend.destroy();
-            }
-            if (chartInstances.dynamics) {
-                chartInstances.dynamics.destroy();
-            }
+            // DESTROY OLD CHARTS
+            if (chartInstances.trend) chartInstances.trend.destroy();
+            if (chartInstances.dynamics) chartInstances.dynamics.destroy();
             
+            // TREND CHART - 2 LINES
             const ctx1 = document.getElementById('trendChart');
             chartInstances.trend = new Chart(ctx1, {
                 type: 'line',
                 data: {
                     labels: MONTHS,
-                    datasets: [{
-                        data: trend,
-                        borderColor: '#1B4F8C',
-                        backgroundColor: 'rgba(27, 79, 140, 0.1)',
-                        borderWidth: 3,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#1B4F8C',
-                        tension: 0.4,
-                        fill: true
-                    }]
+                    datasets: [
+                        {
+                            label: 'Kutilayotgan (NAC)',
+                            data: plannedTrend,
+                            borderColor: '#95a5a6',
+                            backgroundColor: 'rgba(149, 165, 166, 0.08)',
+                            borderWidth: 2.5,
+                            borderDash: [6, 3],
+                            pointRadius: 4,
+                            pointBackgroundColor: '#95a5a6',
+                            tension: 0.4,
+                            fill: true,
+                            pointBorderWidth: 0
+                        },
+                        {
+                            label: 'Real Tushum (UPL)',
+                            data: actualTrend,
+                            borderColor: '#27ae60',
+                            backgroundColor: 'rgba(39, 174, 96, 0.08)',
+                            borderWidth: 2.5,
+                            pointRadius: 4,
+                            pointBackgroundColor: '#27ae60',
+                            tension: 0.4,
+                            fill: true,
+                            pointBorderWidth: 0
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    plugins: {
+                        legend: { display: false },
+                        filler: { propagate: true }
+                    },
+                    interaction: {
+                        intersect: false,
+                        mode: 'index'
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
             
+            // DYNAMICS CHART
             const ctx2 = document.getElementById('dynamicsChart');
             chartInstances.dynamics = new Chart(ctx2, {
                 type: 'bar',
                 data: {
                     labels: MONTHS,
                     datasets: [{
-                        data: trend,
+                        label: 'Real Tushum (mlrd so\'m)',
+                        data: actualTrend,
                         backgroundColor: '#1B4F8C',
                         borderColor: '#0C447C',
-                        borderWidth: 1
+                        borderWidth: 0,
+                        borderRadius: 6
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                        x: { grid: { display: false } }
+                    }
                 }
             });
         }
         
         function searchByJshshir() {
-            const query = document.getElementById('jshshirSearch').value.toLowerCase();
+            const query = document.getElementById('jshshirSearch').value.toLowerCase().trim();
             if (!query) {
                 document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
                 return;
             }
             
-            const results = uniqueData.filter(d => d.JSHSHIR.toLowerCase().includes(query));
+            const results = uniqueData.filter(d => d.JSHSHIR.toLowerCase().includes(query)).slice(0, 50);
             renderSearchResults(results);
         }
         
         function searchByFish() {
-            const query = document.getElementById('fishSearch').value.toLowerCase();
+            const query = document.getElementById('fishSearch').value.toLowerCase().trim();
             if (!query) {
                 document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
                 return;
@@ -548,31 +661,32 @@
             const results = uniqueData.filter(d => {
                 const fio = `${d.FAMILIYA || ''} ${d.ISM || ''} ${d.SHARIF || ''}`.toLowerCase();
                 return fio.includes(query);
-            });
+            }).slice(0, 50);
             
             renderSearchResults(results);
         }
         
         function renderSearchResults(results) {
             if (results.length === 0) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">Natija topilmadi</td></tr>';
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="5" style="text-align:center">❌ Natija topilmadi</td></tr>';
                 return;
             }
             
-            document.getElementById('search-results').innerHTML = results.slice(0, 50).map(d => {
+            document.getElementById('search-results').innerHTML = results.map(d => {
                 const fio = `${d.FAMILIYA || '—'} ${d.ISM || '—'} ${d.SHARIF || '—'}`.trim();
                 const nac = ((parseFloat(d.NAC) || 0) / 1e9).toFixed(3);
                 const upl = ((parseFloat(d.UPL) || 0) / 1e9).toFixed(3);
-                return `<tr><td>${d.JSHSHIR}</td><td>${fio}</td><td>${d.SOLIQ_KODI || '—'}</td><td>${nac}</td><td>${upl}</td></tr>`;
+                return `<tr><td><strong>${d.JSHSHIR}</strong></td><td>${fio}</td><td>${d.SOLIQ_KODI || '—'}</td><td>${nac}</td><td>${upl}</td></tr>`;
             }).join('');
         }
         
         function simulateRealtimeKPI() {
-            let todayValue = 0.1;
+            let todayValue = 0.3 + (Math.random() * 0.4);
             setInterval(() => {
-                todayValue += (Math.random() * 0.05);
+                todayValue += (Math.random() * 0.08 - 0.02);
+                todayValue = Math.max(0.1, Math.min(1.5, todayValue));
                 document.getElementById('realtime-today').textContent = todayValue.toFixed(2);
-            }, 3000);
+            }, 5000);
         }
         
         function showError(msg) {
