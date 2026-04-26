@@ -1,0 +1,24 @@
+# Real data - NEVER push to GitHub
+real_data/
+1777150762520_*.xlsx
+
+# Sensitive files
+.secure/
+*.key
+jshshir_mapping.json
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
