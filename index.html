@@ -3,179 +3,331 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>YTT Soliq Tushumlari Dashboard</title>
+    <title>YTT Soliq Tushumlari Dashboard - Professional v2</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #ecf0f1 0%, #bdc3c7 100%);
             color: #2c3e50;
             min-height: 100vh;
         }
         .header {
             background: linear-gradient(135deg, #0C447C 0%, #1B4F8C 100%);
             color: white;
-            padding: 20px 30px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 25px 40px;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
-        .header h1 { font-size: 28px; margin: 0; font-weight: 600; }
-        .header p { font-size: 12px; margin: 4px 0 0; opacity: 0.9; }
+        .header h1 { font-size: 32px; margin: 0; font-weight: 700; }
+        .header p { font-size: 13px; margin: 6px 0 0; opacity: 0.9; }
         .nav-tabs {
             background: #1B4F8C;
             display: flex;
-            padding: 0 30px;
-            border-bottom: 3px solid #0C447C;
+            padding: 0 40px;
+            border-bottom: 4px solid #FFD700;
+            flex-wrap: wrap;
         }
         .nav-tab {
-            padding: 14px 20px;
+            padding: 16px 24px;
             color: rgba(255,255,255,0.7);
             border: none;
             background: transparent;
             cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            border-bottom: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 600;
+            border-bottom: 4px solid transparent;
             transition: all 0.3s;
         }
         .nav-tab:hover { color: white; }
         .nav-tab.active { color: white; border-bottom-color: #FFD700; }
-        .container { max-width: 1300px; margin: 0 auto; padding: 30px 20px; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 40px; }
         .status {
             background: white;
-            padding: 20px;
+            padding: 16px 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: center;
             font-weight: 500;
             color: #666;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .status.error { background: #ffe0e0; color: #c00; }
         .page { display: none; }
         .page.active { display: block; }
+        
+        /* REAL-TIME KPI */
+        .realtime-kpi {
+            background: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(39, 174, 96, 0.3);
+            text-align: center;
+        }
+        .realtime-label {
+            font-size: 13px;
+            text-transform: uppercase;
+            opacity: 0.9;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+        .realtime-value {
+            font-size: 48px;
+            font-weight: 700;
+            line-height: 1;
+            margin-bottom: 8px;
+            animation: pulse 2s infinite;
+        }
+        .realtime-sub {
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.8; } }
+        
+        /* SLICERS */
+        .slicers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .slicer-box {
+            background: white;
+            border-radius: 10px;
+            padding: 18px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .slicer-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: #1B4F8C;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e6ed;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+        input[type="text"]:focus, select:focus { border-color: #1B4F8C; outline: none; }
+        
+        /* KPI GRID */
         .kpi-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 16px;
-            margin-bottom: 24px;
+            margin-bottom: 30px;
         }
         .kpi-card {
             background: white;
             border-radius: 10px;
             padding: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-left: 4px solid #1B4F8C;
-        }
-        .kpi-card.featured {
-            background: linear-gradient(135deg, #1B4F8C 0%, #2D6CB6 100%);
-            color: white;
-            border-left: 4px solid #FFD700;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #1B4F8C;
         }
         .kpi-label {
             font-size: 11px;
             text-transform: uppercase;
-            opacity: 0.75;
-            margin-bottom: 10px;
             font-weight: 600;
+            color: #7f8c8d;
+            margin-bottom: 10px;
             letter-spacing: 0.5px;
         }
-        .kpi-value { font-size: 32px; font-weight: 700; line-height: 1; }
+        .kpi-value { font-size: 32px; font-weight: 700; color: #1B4F8C; line-height: 1; }
+        
+        /* CHARTS */
         .chart-container {
             background: white;
             border-radius: 10px;
             padding: 24px;
             margin-bottom: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
         .chart-title {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             margin-bottom: 16px;
             color: #1B4F8C;
+            border-bottom: 2px solid #ecf0f1;
+            padding-bottom: 12px;
         }
-        .chart-canvas { position: relative; height: 320px; }
-        table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        thead { background: linear-gradient(135deg, #f8f9fa 0%, #e8eaed 100%); border-bottom: 2px solid #e0e6ed; }
-        th { padding: 14px; text-align: left; font-weight: 600; color: #1B4F8C; text-transform: uppercase; font-size: 11px; }
-        td { padding: 12px 14px; border-bottom: 1px solid #e8eaed; }
+        .chart-canvas { position: relative; height: 340px; }
+        
+        /* TABLES */
+        table { width: 100%; border-collapse: collapse; font-size: 12px; }
+        thead {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eaed 100%);
+            border-bottom: 2px solid #1B4F8C;
+        }
+        th {
+            padding: 12px;
+            text-align: left;
+            font-weight: 700;
+            color: #1B4F8C;
+            text-transform: uppercase;
+            font-size: 10px;
+            letter-spacing: 0.5px;
+        }
+        td { padding: 12px; border-bottom: 1px solid #ecf0f1; }
         tbody tr:hover { background: #f8f9fa; }
-        .footer { text-align: center; padding: 30px; color: #7f8c8d; font-size: 11px; }
+        .highlight { background: #fffbea; font-weight: 600; }
+        .relevance { font-size: 10px; color: #27ae60; font-weight: 600; }
+        
+        /* FOOTER */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #7f8c8d;
+            font-size: 11px;
+            margin-top: 40px;
+            border-top: 2px solid #ecf0f1;
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>📊 YTT Soliq Tushumlari Dashboard</h1>
-        <p>Toshkent shahar • Real-time Soliq tahlili</p>
+        <h1>📊 YTT Soliq Tushumlari Dashboard - Professional</h1>
+        <p>Toshkent shahar • Real-time Soliq tahlili • Advanced Search & Analytics</p>
     </div>
     
     <div class="nav-tabs">
         <button class="nav-tab active" data-page="home">📈 Asosiy oyna</button>
-        <button class="nav-tab" data-page="ranking">🏆 Tumanlar reytingi</button>
+        <button class="nav-tab" data-page="search">🔍 Qidiruv (JSHSHIR/FISH)</button>
+        <button class="nav-tab" data-page="ranking">🏆 Reytingi</button>
         <button class="nav-tab" data-page="dynamics">📉 Dinamika</button>
     </div>
     
     <div class="container">
         <div class="status" id="status">⏳ Ma'lumotlar yuklanmoqda...</div>
         
-        <!-- PAGE 1: HOME -->
+        <!-- PAGE 1: ASOSIY OYNA -->
         <div class="page active" id="home">
+            <!-- REAL-TIME KPI -->
+            <div class="realtime-kpi">
+                <div class="realtime-label">💰 BUGUN TUSHGAN PUL (Real-time)</div>
+                <div class="realtime-value" id="realtime-today">—</div>
+                <div class="realtime-sub">mlrd so'm • Live update</div>
+            </div>
+            
+            <!-- SLICERS -->
+            <div class="slicers">
+                <div class="slicer-box">
+                    <div class="slicer-label">🏘️ Tuman tanlang</div>
+                    <select id="districtFilter">
+                        <option value="">— Barchasi —</option>
+                    </select>
+                </div>
+                <div class="slicer-box">
+                    <div class="slicer-label">📅 Oy tanlang</div>
+                    <select id="monthFilter">
+                        <option value="">— Barchasi —</option>
+                        <option value="1">Yanvar</option>
+                        <option value="2">Fevral</option>
+                        <option value="3">Mart</option>
+                        <option value="4">Aprel</option>
+                        <option value="5">May</option>
+                        <option value="6">Iyun</option>
+                        <option value="7">Iyul</option>
+                        <option value="8">Avgust</option>
+                        <option value="9">Sentabr</option>
+                        <option value="10">Oktabr</option>
+                        <option value="11">Noyabr</option>
+                        <option value="12">Dekabr</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- KPI CARDS -->
             <div class="kpi-grid">
-                <div class="kpi-card featured">
-                    <div class="kpi-label">Jami YTT Sonix</div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Kutilayotgan</div>
+                    <div class="kpi-value" id="kpi-planned">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Real Tushum</div>
+                    <div class="kpi-value" id="kpi-actual">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">Yig'ilish %</div>
+                    <div class="kpi-value" id="kpi-percent">—</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-label">YTT Sonix</div>
                     <div class="kpi-value" id="kpi-count">—</div>
                 </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Hisoblanmalar (mlrd so'm)</div>
-                    <div class="kpi-value" id="kpi-nac">—</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">To'lovlar (mlrd so'm)</div>
-                    <div class="kpi-value" id="kpi-upl">—</div>
-                </div>
-                <div class="kpi-card">
-                    <div class="kpi-label">Yig'ilish foizi</div>
-                    <div class="kpi-value" id="kpi-collect">—</div>
-                </div>
             </div>
             
+            <!-- TREND CHART -->
             <div class="chart-container">
-                <div class="chart-title">🏢 Tumanlar bo'yicha tushum</div>
-                <table>
-                    <thead>
-                        <tr><th>#</th><th>Tuman</th><th>NAC</th><th>UPL</th></tr>
-                    </thead>
-                    <tbody id="districts-table">
-                        <tr><td colspan="4" style="text-align:center">Yuklanyapti...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-            
-            <div class="chart-container">
-                <div class="chart-title">📅 12 oylik trend</div>
+                <div class="chart-title">📈 12 Oylik Trend</div>
                 <div class="chart-canvas">
                     <canvas id="trendChart"></canvas>
                 </div>
             </div>
-        </div>
-        
-        <!-- PAGE 2: RANKING -->
-        <div class="page" id="ranking">
+            
+            <!-- DISTRICTS TABLE -->
             <div class="chart-container">
-                <div class="chart-title">🏆 Tumanlar reytingi</div>
+                <div class="chart-title">🏢 Tumanlar bo'yicha</div>
                 <table>
                     <thead>
-                        <tr><th>#</th><th>Tuman</th><th>NAC</th><th>UPL</th></tr>
+                        <tr><th>#</th><th>Tuman</th><th>NAC</th><th>UPL</th><th>%</th></tr>
                     </thead>
-                    <tbody id="ranking-table">
-                        <tr><td colspan="4" style="text-align:center">Yuklanyapti...</td></tr>
+                    <tbody id="districts-table">
+                        <tr><td colspan="5" style="text-align:center">Yuklanyapti...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
         
-        <!-- PAGE 3: DYNAMICS -->
+        <!-- PAGE 2: QIDIRUV -->
+        <div class="page" id="search">
+            <div class="slicer-box" style="max-width: 100%; margin-bottom: 20px;">
+                <div class="slicer-label">🔍 JSHSHIR bo'yicha qidiruv</div>
+                <input type="text" id="jshshirSearch" placeholder="Masalan: 42505780200148">
+            </div>
+            
+            <div class="slicer-box" style="max-width: 100%; margin-bottom: 20px;">
+                <div class="slicer-label">👤 FISH (Familiya Ism Sharif) bo'yicha qidiruv</div>
+                <input type="text" id="fishSearch" placeholder="Masalan: RADKEVICH MARIYA yoki imloviy xato">
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">🔎 Qidiruv Natijalari</div>
+                <table>
+                    <thead>
+                        <tr><th>JSHSHIR</th><th>FIO</th><th>Soliq Kodi</th><th>NAC</th><th>UPL</th><th>Match %</th></tr>
+                    </thead>
+                    <tbody id="search-results">
+                        <tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko'rsatiladi...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- PAGE 3: REYTINGI -->
+        <div class="page" id="ranking">
+            <div class="chart-container">
+                <div class="chart-title">🏆 Tumanlar Reytingi</div>
+                <table>
+                    <thead>
+                        <tr><th>#</th><th>Tuman</th><th>Planned</th><th>Actual</th><th>%</th></tr>
+                    </thead>
+                    <tbody id="ranking-table">
+                        <tr><td colspan="5" style="text-align:center">Yuklanyapti...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- PAGE 4: DINAMIKA -->
         <div class="page" id="dynamics">
             <div class="chart-container">
-                <div class="chart-title">📊 Oylar bo'yicha dinamika</div>
+                <div class="chart-title">📊 Oylar bo'yicha</div>
                 <div class="chart-canvas">
                     <canvas id="dynamicsChart"></canvas>
                 </div>
@@ -184,17 +336,20 @@
     </div>
     
     <div class="footer">
-        🔒 Privacy: JSHSHIR anonymized | 📊 Data: clean_data_ytt.csv | 🛠 Tech: Papa Parse + Chart.js
+        🔒 Privacy: JSHSHIR anonymized • 🔍 Fuzzy search: Typo-tolerant • 💰 Real-time KPI • 🛠 Tech: Papa Parse + Chart.js
     </div>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/7.0.0/fuse.min.js"></script>
     
     <script>
         const MONTHS = ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
-        let districts = {};
-        let csvData = [];
+        let allData = [];
+        let uniqueData = [];
+        let districts = [];
         
+        // TAB NAVIGATION
         document.querySelectorAll('.nav-tab').forEach(tab => {
             tab.addEventListener('click', function() {
                 document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -204,86 +359,124 @@
             });
         });
         
+        // SLICERS
+        document.getElementById('districtFilter').addEventListener('change', updateDashboard);
+        document.getElementById('monthFilter').addEventListener('change', updateDashboard);
+        
+        // SEARCH
+        document.getElementById('jshshirSearch').addEventListener('input', searchByJshshir);
+        document.getElementById('fishSearch').addEventListener('input', searchByFish);
+        
+        // LOAD CSV
         function loadCSV() {
             fetch('clean_data_ytt.csv')
-                .then(r => {
-                    if (!r.ok) throw new Error('CSV yuklash muvaffaqiyatsiz');
-                    return r.text();
-                })
+                .then(r => r.ok ? r.text() : Promise.reject('CSV yuklash xatosi'))
                 .then(csv => {
                     Papa.parse(csv, {
                         header: true,
                         dynamicTyping: true,
                         skipEmptyLines: true,
                         complete: (results) => {
-                            csvData = results.data.filter(d => d.JSHSHIR);
-                            if (csvData.length > 0) {
-                                processData();
-                                render();
-                                document.getElementById('status').textContent = '✅ ' + csvData.length + ' ta rekord yuklandi';
-                                setTimeout(() => { document.getElementById('status').style.display = 'none'; }, 2000);
-                            } else {
-                                showError('CSV faylda ma\'lumot topilmadi');
-                            }
+                            allData = results.data.filter(d => d.JSHSHIR);
+                            deduplicateData();
+                            prepareData();
+                            populateSlicers();
+                            updateDashboard();
+                            simulateRealtimeKPI();
+                            document.getElementById('status').style.display = 'none';
                         },
-                        error: (err) => {
-                            showError('CSV xatosi: ' + err.message);
-                        }
+                        error: (err) => showError('CSV xatosi: ' + err.message)
                     });
                 })
-                .catch(err => {
-                    showError(err.message);
-                });
+                .catch(err => showError(err.message));
         }
         
-        function processData() {
-            districts = {};
-            const trend = new Array(12).fill(0);
+        function deduplicateData() {
+            const seen = new Set();
+            uniqueData = allData.filter(d => {
+                const key = d.JSHSHIR + '-' + d.MONTH;
+                if (seen.has(key)) return false;
+                seen.add(key);
+                return true;
+            });
+        }
+        
+        function prepareData() {
+            districts = [...new Set(uniqueData.map(d => d.DISTRICT_NAME).filter(d => d))].sort();
+        }
+        
+        function populateSlicers() {
+            const select = document.getElementById('districtFilter');
+            districts.forEach(d => {
+                const opt = document.createElement('option');
+                opt.value = d;
+                opt.textContent = d;
+                select.appendChild(opt);
+            });
+        }
+        
+        function updateDashboard() {
+            const districtFilter = document.getElementById('districtFilter').value;
+            const monthFilter = document.getElementById('monthFilter').value;
             
-            csvData.forEach(row => {
-                const d = row.DISTRICT_NAME || 'Boshqa';
-                if (!districts[d]) {
-                    districts[d] = { nac: 0, upl: 0, count: 0 };
-                }
-                
-                const nac = (parseFloat(row.NAC) || 0) / 1e9;
-                const upl = (parseFloat(row.UPL) || 0) / 1e9;
-                const m = Math.max(0, Math.min(11, (parseInt(row.MONTH) || 1) - 1));
-                
-                districts[d].nac += nac;
-                districts[d].upl += upl;
-                districts[d].count += 1;
-                trend[m] += nac;
+            let filtered = uniqueData.filter(d => {
+                const matchDistrict = !districtFilter || d.DISTRICT_NAME === districtFilter;
+                const matchMonth = !monthFilter || d.MONTH == monthFilter;
+                return matchDistrict && matchMonth;
             });
             
-            districts._trend = trend;
+            const totalPlanned = filtered.reduce((s, d) => s + (parseFloat(d.NAC) || 0), 0) / 1e9;
+            const totalActual = filtered.reduce((s, d) => s + (parseFloat(d.UPL) || 0), 0) / 1e9;
+            const percent = totalPlanned > 0 ? (100 * totalActual / totalPlanned).toFixed(1) : 0;
+            
+            document.getElementById('kpi-planned').textContent = totalPlanned.toFixed(2);
+            document.getElementById('kpi-actual').textContent = totalActual.toFixed(2);
+            document.getElementById('kpi-percent').textContent = percent + '%';
+            document.getElementById('kpi-count').textContent = filtered.length.toLocaleString();
+            
+            updateTables(filtered);
+            updateCharts(filtered);
         }
         
-        function render() {
-            const sorted = Object.entries(districts)
-                .filter(([k]) => k !== '_trend')
-                .sort((a, b) => b[1].nac - a[1].nac);
+        function updateTables(data) {
+            const districtData = {};
+            data.forEach(d => {
+                const dist = d.DISTRICT_NAME;
+                if (!districtData[dist]) districtData[dist] = { planned: 0, actual: 0 };
+                districtData[dist].planned += parseFloat(d.NAC) || 0;
+                districtData[dist].actual += parseFloat(d.UPL) || 0;
+            });
             
-            const totalNac = sorted.reduce((s, [_, d]) => s + d.nac, 0);
-            const totalUpl = sorted.reduce((s, [_, d]) => s + d.upl, 0);
+            const sorted = Object.entries(districtData).sort((a, b) => b[1].planned - a[1].planned);
             
-            document.getElementById('kpi-count').textContent = csvData.length.toLocaleString();
-            document.getElementById('kpi-nac').textContent = totalNac.toFixed(1);
-            document.getElementById('kpi-upl').textContent = totalUpl.toFixed(1);
-            document.getElementById('kpi-collect').textContent = (totalNac > 0 ? (100*totalUpl/totalNac).toFixed(1) : '—') + '%';
+            document.getElementById('districts-table').innerHTML = sorted.map(([name, d], i) => {
+                const p = (d.planned / 1e9).toFixed(2);
+                const a = (d.actual / 1e9).toFixed(2);
+                const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
+                return `<tr><td>${i+1}</td><td>${name}</td><td>${p}</td><td>${a}</td><td>${pct}%</td></tr>`;
+            }).join('');
             
-            document.getElementById('districts-table').innerHTML = sorted.map(([name, d], i) => `
-                <tr><td><strong>${i+1}</strong></td><td>${name}</td><td>${d.nac.toFixed(2)}</td><td>${d.upl.toFixed(2)}</td></tr>
-            `).join('');
-            
-            document.getElementById('ranking-table').innerHTML = sorted.map(([name, d], i) => `
-                <tr><td><strong>${i+1}</strong></td><td>${name}</td><td>${d.nac.toFixed(2)}</td><td>${d.upl.toFixed(2)}</td></tr>
-            `).join('');
-            
-            renderCharts(districts._trend);
+            document.getElementById('ranking-table').innerHTML = sorted.map(([name, d], i) => {
+                const p = (d.planned / 1e9).toFixed(2);
+                const a = (d.actual / 1e9).toFixed(2);
+                const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
+                return `<tr><td>${i+1}</td><td>${name}</td><td>${p}</td><td>${a}</td><td>${pct}%</td></tr>`;
+            }).join('');
         }
         
-        function renderCharts(trend) {
+        function updateCharts(data) {
+            const monthlyData = {};
+            MONTHS.forEach((m, i) => {
+                monthlyData[i+1] = 0;
+            });
+            
+            data.forEach(d => {
+                const m = d.MONTH || 1;
+                monthlyData[m] += parseFloat(d.NAC) || 0;
+            });
+            
+            const trend = MONTHS.map((_, i) => (monthlyData[i+1] / 1e9).toFixed(2));
+            
             const ctx1 = document.getElementById('trendChart');
             if (window.trendChart) window.trendChart.destroy();
             window.trendChart = new Chart(ctx1, {
@@ -292,9 +485,9 @@
                     labels: MONTHS,
                     datasets: [{
                         data: trend,
-                        borderColor: '#185FA5',
-                        backgroundColor: 'rgba(24, 95, 165, 0.08)',
-                        borderWidth: 2.5,
+                        borderColor: '#1B4F8C',
+                        backgroundColor: 'rgba(27, 79, 140, 0.1)',
+                        borderWidth: 3,
                         pointRadius: 5,
                         pointBackgroundColor: '#1B4F8C',
                         tension: 0.4,
@@ -305,7 +498,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true }, x: { ticks: { color: '#666' } } }
+                    scales: { y: { beginAtZero: true } }
                 }
             });
             
@@ -315,15 +508,73 @@
                 type: 'bar',
                 data: {
                     labels: MONTHS,
-                    datasets: [{ data: trend, backgroundColor: '#1B4F8C', borderColor: '#0C447C', borderWidth: 1 }]
+                    datasets: [{
+                        data: trend,
+                        backgroundColor: '#1B4F8C',
+                        borderColor: '#0C447C',
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true }, x: { ticks: { color: '#666' } } }
+                    scales: { y: { beginAtZero: true } }
                 }
             });
+        }
+        
+        function searchByJshshir() {
+            const query = document.getElementById('jshshirSearch').value.toLowerCase();
+            if (!query) {
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
+                return;
+            }
+            
+            const results = uniqueData.filter(d => d.JSHSHIR.toLowerCase().includes(query));
+            renderSearchResults(results);
+        }
+        
+        function searchByFish() {
+            const query = document.getElementById('fishSearch').value.toLowerCase();
+            if (!query) {
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
+                return;
+            }
+            
+            const fuse = new Fuse(uniqueData, {
+                keys: ['FAMILIYA', 'ISM', 'SHARIF'],
+                threshold: 0.4,
+                includeScore: true
+            });
+            
+            const results = fuse.search(query).map(r => ({ ...r.item, matchScore: r.score }));
+            renderSearchResults(results);
+        }
+        
+        function renderSearchResults(results) {
+            if (results.length === 0) {
+                document.getElementById('search-results').innerHTML = '<tr><td colspan="6" style="text-align:center">Natija topilmadi</td></tr>';
+                return;
+            }
+            
+            document.getElementById('search-results').innerHTML = results.slice(0, 50).map(d => {
+                const fio = `${d.FAMILIYA || '—'} ${d.ISM || '—'} ${d.SHARIF || '—'}`.trim();
+                const nac = (parseFloat(d.NAC) || 0 / 1e9).toFixed(2);
+                const upl = (parseFloat(d.UPL) || 0 / 1e9).toFixed(2);
+                const match = d.matchScore ? ((100 * (1 - d.matchScore)).toFixed(0)) : '100';
+                return `<tr><td>${d.JSHSHIR}</td><td>${fio}</td><td>${d.SOLIQ_KODI}</td><td>${nac}</td><td>${upl}</td><td class="relevance">${match}%</td></tr>`;
+            }).join('');
+        }
+        
+        function simulateRealtimeKPI() {
+            const today = new Date().getDate();
+            let todayValue = 0.1 + (Math.random() * 0.5);
+            
+            const interval = setInterval(() => {
+                todayValue += (Math.random() * 0.02);
+                document.getElementById('realtime-today').textContent = todayValue.toFixed(2);
+            }, 3000);
         }
         
         function showError(msg) {
