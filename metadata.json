@@ -1,0 +1,242 @@
+{
+  "districts": [
+    {
+      "code": 2601,
+      "name": "Mirobod tumani",
+      "pop": 235000,
+      "area": 21.0,
+      "density": 11190,
+      "gdp_share": 9.8,
+      "lat": 41.2926,
+      "lng": 69.2647
+    },
+    {
+      "code": 2602,
+      "name": "Mirzo Ulug'bek tumani",
+      "pop": 268000,
+      "area": 35.4,
+      "density": 7570,
+      "gdp_share": 9.5,
+      "lat": 41.3411,
+      "lng": 69.3408
+    },
+    {
+      "code": 2603,
+      "name": "Yunusobod tumani",
+      "pop": 326000,
+      "area": 32.4,
+      "density": 10062,
+      "gdp_share": 10.2,
+      "lat": 41.37,
+      "lng": 69.287
+    },
+    {
+      "code": 2604,
+      "name": "Yakkasaroy tumani",
+      "pop": 158000,
+      "area": 4.9,
+      "density": 32245,
+      "gdp_share": 7.8,
+      "lat": 41.28,
+      "lng": 69.23
+    },
+    {
+      "code": 2605,
+      "name": "Shayxontohur tumani",
+      "pop": 348000,
+      "area": 23.4,
+      "density": 14872,
+      "gdp_share": 8.9,
+      "lat": 41.327,
+      "lng": 69.235
+    },
+    {
+      "code": 2606,
+      "name": "Chilonzor tumani",
+      "pop": 295000,
+      "area": 27.5,
+      "density": 10727,
+      "gdp_share": 9.4,
+      "lat": 41.285,
+      "lng": 69.203
+    },
+    {
+      "code": 2607,
+      "name": "Sergeli tumani",
+      "pop": 218000,
+      "area": 35.0,
+      "density": 6229,
+      "gdp_share": 6.2,
+      "lat": 41.22,
+      "lng": 69.22
+    },
+    {
+      "code": 2608,
+      "name": "Yashnobod tumani",
+      "pop": 254000,
+      "area": 28.0,
+      "density": 9071,
+      "gdp_share": 7.5,
+      "lat": 41.305,
+      "lng": 69.303
+    },
+    {
+      "code": 2609,
+      "name": "Olmazor tumani",
+      "pop": 367000,
+      "area": 21.4,
+      "density": 17150,
+      "gdp_share": 8.3,
+      "lat": 41.365,
+      "lng": 69.22
+    },
+    {
+      "code": 2610,
+      "name": "Uchtepa tumani",
+      "pop": 248000,
+      "area": 23.0,
+      "density": 10783,
+      "gdp_share": 7.6,
+      "lat": 41.262,
+      "lng": 69.173
+    },
+    {
+      "code": 2611,
+      "name": "Bektemir tumani",
+      "pop": 38000,
+      "area": 22.0,
+      "density": 1727,
+      "gdp_share": 4.3,
+      "lat": 41.227,
+      "lng": 69.392
+    },
+    {
+      "code": 2612,
+      "name": "Yangihayot tumani",
+      "pop": 185000,
+      "area": 38.0,
+      "density": 4868,
+      "gdp_share": 5.5,
+      "lat": 41.205,
+      "lng": 69.185
+    }
+  ],
+  "sectors": [
+    {
+      "id": 1,
+      "name": "Chakana savdo",
+      "share": 28.4,
+      "avg_revenue": 4.2
+    },
+    {
+      "id": 2,
+      "name": "Oziq-ovqat ishlab ch.",
+      "share": 18.6,
+      "avg_revenue": 5.1
+    },
+    {
+      "id": 3,
+      "name": "Maishiy xizmat",
+      "share": 14.8,
+      "avg_revenue": 3.4
+    },
+    {
+      "id": 4,
+      "name": "Transport xizmati",
+      "share": 12.3,
+      "avg_revenue": 3.8
+    },
+    {
+      "id": 5,
+      "name": "Hunarmandchilik",
+      "share": 9.7,
+      "avg_revenue": 2.9
+    },
+    {
+      "id": 6,
+      "name": "IT va raqamli xizm.",
+      "share": 7.2,
+      "avg_revenue": 8.5
+    },
+    {
+      "id": 7,
+      "name": "Ta'lim va konsalting",
+      "share": 5.5,
+      "avg_revenue": 6.2
+    },
+    {
+      "id": 8,
+      "name": "Boshqa xizmatlar",
+      "share": 3.5,
+      "avg_revenue": 4.0
+    }
+  ],
+  "tax_codes": [
+    {
+      "code": 100,
+      "name": "Qat'iy belgilangan JShDS",
+      "share": 35.2,
+      "rate": "Faoliyat turiga ko'ra"
+    },
+    {
+      "code": 46,
+      "name": "Daromad solig'i (deklaratsiya)",
+      "share": 28.5,
+      "rate": "12%"
+    },
+    {
+      "code": 51,
+      "name": "Ijtimoiy soliq (xodimlar)",
+      "share": 18.3,
+      "rate": "12% + 1 BHM"
+    },
+    {
+      "code": 130,
+      "name": "Aylanmadan olinadigan soliq",
+      "share": 11.2,
+      "rate": "0-4%"
+    },
+    {
+      "code": 184,
+      "name": "Mol-mulk solig'i",
+      "share": 4.3,
+      "rate": "1.5%"
+    },
+    {
+      "code": 211,
+      "name": "Yer solig'i",
+      "share": 1.8,
+      "rate": "Hududga ko'ra"
+    },
+    {
+      "code": 156,
+      "name": "Boshqa soliqlar",
+      "share": 0.7,
+      "rate": "—"
+    }
+  ],
+  "regimes": [
+    {
+      "id": 1,
+      "name": "Qat'iy belgilangan",
+      "limit": "100 mln so'mgacha",
+      "share": 83.5
+    },
+    {
+      "id": 2,
+      "name": "Aylanma soliq",
+      "limit": "100 mln - 1 mlrd",
+      "share": 15.0
+    },
+    {
+      "id": 3,
+      "name": "Umumbelgilangan",
+      "limit": "1 mlrd dan ortiq",
+      "share": 1.5
+    }
+  ],
+  "total_records": 8124,
+  "total_ytt": 677,
+  "year": 2026,
+  "generated": "2026-04-27T16:40:20.589047"
+}
