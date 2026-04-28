@@ -1,777 +1,1283 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hududlar bo'yicha Yakka Tartibdagi Tadbirkorlar Soliq Tushumlari Tahlili</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        :root {
-            --color-navy: #1A3A52;
-            --color-slate: #2D5A7B;
-            --color-emerald: #10B981;
-            --color-grey: #6B7280;
-            --color-light: #F8F9FA;
-            --color-border: #E5E7EB;
-            --font-main: 'Segoe UI', 'Roboto', sans-serif;
-        }
-        
-        body {
-            font-family: var(--font-main);
-            background: var(--color-light);
-            color: var(--color-navy);
-            line-height: 1.6;
-        }
-        
-        /* HEADER - RASMIY */
-        .header {
-            background: linear-gradient(135deg, var(--color-navy) 0%, var(--color-slate) 100%);
-            color: white;
-            padding: 40px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-bottom: 3px solid var(--color-emerald);
-        }
-        
-        .header-top {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        .header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin: 0 0 8px 0;
-            letter-spacing: -0.5px;
-        }
-        
-        .header p {
-            font-size: 13px;
-            opacity: 0.9;
-            margin: 6px 0 0 0;
-            font-weight: 500;
-        }
-        
-        .header-meta {
-            font-size: 11px;
-            opacity: 0.75;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid rgba(255,255,255,0.2);
-        }
-        
-        /* NAV TABS - MINIMALIST */
-        .nav-tabs {
-            background: white;
-            border-bottom: 2px solid var(--color-border);
-            padding: 0;
-            max-width: 1400px;
-            margin: 0 auto;
-            display: flex;
-            flex-wrap: wrap;
-        }
-        
-        .nav-tab {
-            padding: 16px 24px;
-            border: none;
-            background: transparent;
-            color: var(--color-grey);
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            border-bottom: 3px solid transparent;
-            transition: all 0.3s ease;
-            margin: 0;
-        }
-        
-        .nav-tab:hover {
-            color: var(--color-navy);
-            border-bottom-color: var(--color-slate);
-        }
-        
-        .nav-tab.active {
-            color: var(--color-navy);
-            border-bottom-color: var(--color-emerald);
-        }
-        
-        /* CONTAINER */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px;
-        }
-        
-        .status {
-            background: white;
-            padding: 16px 20px;
-            border-radius: 6px;
-            margin-bottom: 24px;
-            text-align: center;
-            font-weight: 500;
-            color: var(--color-grey);
-            border-left: 4px solid var(--color-emerald);
-        }
-        
-        .status.error {
-            border-left-color: #EF4444;
-            color: #991B1B;
-        }
-        
-        .page { display: none; }
-        .page.active { display: block; animation: fadeIn 0.3s; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* REALTIME KPI - PROFESSIONAL */
-        .realtime-kpi {
-            background: linear-gradient(135deg, var(--color-emerald) 0%, #059669 100%);
-            color: white;
-            border-radius: 8px;
-            padding: 32px;
-            margin-bottom: 32px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        
-        .realtime-label {
-            font-size: 12px;
-            text-transform: uppercase;
-            font-weight: 700;
-            opacity: 0.9;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-        }
-        
-        .realtime-value {
-            font-size: 48px;
-            font-weight: 800;
-            line-height: 1;
-            margin-bottom: 8px;
-            animation: pulse 2s infinite;
-        }
-        
-        .realtime-sub {
-            font-size: 12px;
-            opacity: 0.85;
-            font-weight: 500;
-        }
-        
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.85; } }
-        
-        /* SLICERS - CLEAN */
-        .slicers {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-        
-        .slicer-box {
-            background: white;
-            border-radius: 6px;
-            padding: 18px;
-            border: 1px solid var(--color-border);
-        }
-        
-        .slicer-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--color-navy);
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-        
-        select, input[type="text"] {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--color-border);
-            border-radius: 4px;
-            font-size: 13px;
-            font-family: var(--font-main);
-        }
-        
-        select:focus, input[type="text"]:focus {
-            outline: none;
-            border-color: var(--color-emerald);
-            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.1);
-        }
-        
-        /* KPI GRID - MINIMALIST */
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 32px;
-        }
-        
-        .kpi-card {
-            background: white;
-            border-radius: 6px;
-            padding: 24px;
-            border: 1px solid var(--color-border);
-            border-left: 4px solid var(--color-slate);
-            transition: all 0.3s;
-        }
-        
-        .kpi-card:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        
-        .kpi-icon {
-            width: 32px;
-            height: 32px;
-            margin-bottom: 12px;
-            opacity: 0.7;
-        }
-        
-        .kpi-label {
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            color: var(--color-grey);
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-        
-        .kpi-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--color-navy);
-            line-height: 1;
-            margin-bottom: 4px;
-        }
-        
-        .kpi-unit {
-            font-size: 12px;
-            color: var(--color-grey);
-            font-weight: 500;
-        }
-        
-        /* CHARTS - CLEAN */
-        .chart-container {
-            background: white;
-            border-radius: 6px;
-            padding: 28px;
-            margin-bottom: 28px;
-            border: 1px solid var(--color-border);
-        }
-        
-        .chart-title {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 18px;
-            color: var(--color-navy);
-            border-bottom: 2px solid var(--color-border);
-            padding-bottom: 12px;
-            letter-spacing: -0.3px;
-        }
-        
-        .chart-canvas { position: relative; height: 360px; }
-        
-        /* TABLES - ACADEMIC */
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        
-        thead {
-            background: var(--color-light);
-            border-bottom: 2px solid var(--color-slate);
-        }
-        
-        th {
-            padding: 12px;
-            text-align: left;
-            font-weight: 700;
-            color: var(--color-navy);
-            text-transform: uppercase;
-            font-size: 10px;
-            letter-spacing: 0.5px;
-        }
-        
-        td {
-            padding: 12px;
-            border-bottom: 1px solid var(--color-border);
-            color: var(--color-navy);
-        }
-        
-        tbody tr:hover { background: rgba(16, 185, 129, 0.02); }
-        
-        /* FOOTER - RASMIY */
-        .footer {
-            background: var(--color-navy);
-            color: white;
-            padding: 32px 40px;
-            margin-top: 60px;
-            text-align: center;
-            font-size: 11px;
-            line-height: 1.8;
-            font-weight: 500;
-            border-top: 3px solid var(--color-emerald);
-        }
-        
-        .footer-line {
-            opacity: 0.8;
-            margin: 4px 0;
-        }
-        
-        .footer-emphasis {
-            opacity: 1;
-            font-weight: 700;
-            margin-top: 8px;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YTT Soliq Tushumlari Dashboard | Toshkent shahar Davlat soliq boshqarmasi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+<style>
+:root {
+  --navy: #0B2545;
+  --navy-light: #13315C;
+  --teal: #134E4A;
+  --emerald: #047857;
+  --gold: #B7935C;
+  --gold-light: #D4AF7A;
+  --red: #B91C1C;
+  --orange: #C2410C;
+  --slate-50: #F8FAFC;
+  --slate-100: #F1F5F9;
+  --slate-200: #E2E8F0;
+  --slate-300: #CBD5E1;
+  --slate-500: #64748B;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1E293B;
+  --slate-900: #0F172A;
+  --white: #FFFFFF;
+  --shadow-sm: 0 1px 2px rgba(0,0,0,.04);
+  --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.03);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.05), 0 2px 4px rgba(0,0,0,.04);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,.06), 0 4px 6px rgba(0,0,0,.03);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--slate-50);
+  color: var(--slate-800);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ============ STATE BANNER ============ */
+.state-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  color: var(--white);
+  padding: 4px 0;
+  font-size: 11px;
+  text-align: center;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-bottom: 2px solid var(--gold);
+}
+
+/* ============ HEADER ============ */
+.main-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--slate-200);
+  padding: 16px 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.coat-of-arms {
+  width: 64px;
+  height: 64px;
+  flex-shrink: 0;
+}
+
+.header-text {
+  flex: 1;
+}
+
+.header-org {
+  font-size: 11px;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.header-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--navy);
+  letter-spacing: -0.4px;
+  line-height: 1.2;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: var(--slate-600);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+.header-meta {
+  text-align: right;
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  background: rgba(4, 120, 87, 0.08);
+  color: var(--emerald);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--emerald);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+/* ============ NAV TABS ============ */
+.nav-tabs {
+  background: var(--white);
+  border-bottom: 1px solid var(--slate-200);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  box-shadow: var(--shadow);
+}
+
+.nav-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.nav-tab {
+  padding: 14px 20px;
+  border: none;
+  background: transparent;
+  color: var(--slate-600);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: inherit;
+}
+
+.nav-tab:hover { color: var(--navy); background: var(--slate-50); }
+
+.nav-tab.active {
+  color: var(--navy);
+  border-bottom-color: var(--navy);
+  background: var(--slate-50);
+}
+
+.nav-tab svg { width: 16px; height: 16px; }
+
+/* ============ CONTAINER ============ */
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.tab-content { display: none; animation: fadeIn 0.4s ease; }
+.tab-content.active { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============ REAL-TIME COUNTER ============ */
+.realtime-banner {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+  border-radius: 12px;
+  padding: 24px 28px;
+  color: var(--white);
+  margin-bottom: 24px;
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.realtime-banner::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(183, 147, 92, 0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.realtime-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+.realtime-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--gold-light);
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.realtime-value {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
+  font-variant-numeric: tabular-nums;
+}
+
+.realtime-unit {
+  font-size: 16px;
+  color: var(--slate-300);
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.realtime-info {
+  font-size: 12px;
+  color: var(--slate-300);
+  margin-top: 6px;
+}
+
+.realtime-stats {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.realtime-stat {
+  text-align: right;
+}
+
+.realtime-stat-label {
+  font-size: 11px;
+  color: var(--slate-300);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.realtime-stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--gold-light);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ============ FILTER BAR ============ */
+.filter-bar {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.filter-group { display: flex; flex-direction: column; gap: 6px; }
+
+.filter-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--slate-500);
+  font-weight: 600;
+}
+
+.filter-select, .filter-input {
+  padding: 9px 12px;
+  border: 1px solid var(--slate-300);
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--white);
+  color: var(--slate-800);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.filter-select:hover, .filter-input:hover { border-color: var(--slate-500); }
+.filter-select:focus, .filter-input:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.08);
+}
+
+.filter-reset {
+  padding: 9px 16px;
+  background: var(--slate-100);
+  border: 1px solid var(--slate-300);
+  border-radius: 7px;
+  color: var(--slate-700);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.filter-reset:hover { background: var(--slate-200); }
+
+/* ============ KPI CARDS ============ */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card:hover {
+  border-color: var(--slate-300);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--navy);
+}
+
+.kpi-card.kpi-success::before { background: var(--emerald); }
+.kpi-card.kpi-gold::before { background: var(--gold); }
+.kpi-card.kpi-warning::before { background: var(--orange); }
+
+.kpi-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--slate-500);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+}
+
+.kpi-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--slate-100);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--navy);
+}
+
+.kpi-icon svg { width: 18px; height: 18px; }
+
+.kpi-value {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--slate-900);
+  letter-spacing: -0.8px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.kpi-unit {
+  font-size: 14px;
+  color: var(--slate-500);
+  margin-left: 4px;
+  font-weight: 500;
+}
+
+.kpi-trend {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--emerald);
+}
+
+.kpi-trend.negative { color: var(--red); }
+
+/* ============ CHARTS ============ */
+.chart-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chart-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+@media (max-width: 1024px) {
+  .chart-grid, .chart-grid-3 { grid-template-columns: 1fr; }
+}
+
+.chart-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+.chart-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.chart-subtitle {
+  font-size: 11px;
+  color: var(--slate-500);
+  margin-top: 2px;
+}
+
+.chart-container {
+  position: relative;
+  height: 320px;
+}
+
+.chart-container.tall { height: 400px; }
+.chart-container.short { height: 240px; }
+
+/* ============ MAP ============ */
+.map-container {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.map-svg-wrapper {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: var(--slate-50);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.map-svg { width: 100%; height: 100%; }
+
+.district-shape {
+  cursor: pointer;
+  transition: opacity 0.2s, stroke-width 0.2s;
+  stroke: var(--white);
+  stroke-width: 2;
+}
+
+.district-shape:hover { opacity: 0.85; stroke-width: 3; }
+
+.district-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  fill: var(--white);
+  pointer-events: none;
+  text-anchor: middle;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.district-value {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  fill: var(--white);
+  pointer-events: none;
+  text-anchor: middle;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+.map-tooltip {
+  position: absolute;
+  background: var(--slate-900);
+  color: var(--white);
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  box-shadow: var(--shadow-lg);
+  z-index: 100;
+  max-width: 240px;
+}
+
+.map-tooltip.visible { opacity: 1; }
+
+.map-tooltip-title { font-weight: 700; margin-bottom: 6px; color: var(--gold-light); }
+.map-tooltip-row { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 2px; }
+.map-tooltip-label { color: var(--slate-300); }
+.map-tooltip-value { color: var(--white); font-weight: 600; }
+
+.map-legend {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--slate-100);
+  font-size: 12px;
+  color: var(--slate-600);
+}
+
+.legend-gradient {
+  width: 200px;
+  height: 12px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #FCA5A5 0%, #FCD34D 50%, #6EE7B7 100%);
+  border: 1px solid var(--slate-200);
+}
+
+/* ============ TABLE ============ */
+.table-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.table-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--slate-100);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.table-wrapper { overflow-x: auto; }
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 13px;
+  border-bottom: 1px solid var(--slate-100);
+}
+
+th {
+  background: var(--slate-50);
+  font-weight: 600;
+  color: var(--slate-700);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  position: sticky;
+  top: 0;
+}
+
+td.right, th.right { text-align: right; font-variant-numeric: tabular-nums; }
+td.center, th.center { text-align: center; }
+
+tbody tr { transition: background 0.15s; }
+tbody tr:hover { background: var(--slate-50); }
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 11px;
+  background: var(--slate-100);
+  color: var(--slate-700);
+}
+
+.rank-badge.gold { background: linear-gradient(135deg, #FBBF24, #F59E0B); color: white; }
+.rank-badge.silver { background: linear-gradient(135deg, #D1D5DB, #9CA3AF); color: white; }
+.rank-badge.bronze { background: linear-gradient(135deg, #B7935C, #92744A); color: white; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.badge-success { background: rgba(4, 120, 87, 0.1); color: var(--emerald); }
+.badge-warning { background: rgba(194, 65, 12, 0.1); color: var(--orange); }
+.badge-danger { background: rgba(185, 28, 28, 0.1); color: var(--red); }
+.badge-info { background: rgba(11, 37, 69, 0.1); color: var(--navy); }
+
+/* ============ SEARCH ============ */
+.search-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) { .search-grid { grid-template-columns: 1fr; } }
+
+.search-card {
+  background: var(--white);
+  border: 1px solid var(--slate-200);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+.search-card h3 {
+  font-size: 14px;
+  color: var(--navy);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.search-input-wrapper { position: relative; }
+
+.search-input {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid var(--slate-300);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--navy);
+  box-shadow: 0 0 0 3px rgba(11, 37, 69, 0.08);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--slate-500);
+  width: 18px;
+  height: 18px;
+}
+
+.search-stats {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--slate-500);
+}
+
+/* ============ FOOTER ============ */
+.footer {
+  background: var(--navy);
+  color: var(--slate-300);
+  padding: 32px 0;
+  margin-top: 40px;
+  border-top: 4px solid var(--gold);
+}
+
+.footer-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 768px) { .footer-container { grid-template-columns: 1fr; } }
+
+.footer-section h4 {
+  color: var(--gold-light);
+  font-size: 12px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.footer-section p {
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--slate-300);
+}
+
+.footer-bottom {
+  max-width: 1440px;
+  margin: 24px auto 0;
+  padding: 20px 24px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  font-size: 11px;
+  color: var(--slate-500);
+}
+
+/* ============ EXPORT BUTTON ============ */
+.btn-export {
+  padding: 8px 14px;
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 7px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+  font-family: inherit;
+}
+
+.btn-export:hover { background: var(--navy-light); }
+.btn-export svg { width: 14px; height: 14px; }
+
+/* ============ EMPTY STATES ============ */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--slate-500);
+  font-size: 13px;
+}
+
+.loading {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--slate-500);
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid var(--slate-200);
+  border-top-color: var(--navy);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 12px;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 768px) {
+  .header-container { flex-direction: column; align-items: flex-start; }
+  .header-meta { text-align: left; }
+  .realtime-value { font-size: 28px; }
+  .kpi-value { font-size: 24px; }
+  .container { padding: 16px; }
+}
+</style>
 </head>
 <body>
-    <!-- HEADER -->
-    <div class="header">
-        <div class="header-top">
-            <h1>Hududlar bo'yicha Yakka Tartibdagi Tadbirkorlar Soliq Tushumlari Tahlili</h1>
-            <p>O'zbekiston Respublikasi Toshkent shahri Soliq qo'mitasi</p>
-            <div class="header-meta">
-                Bitiruv Malakaviy Ishi • Real-time Analytics Platform • 2024-2025
-            </div>
-        </div>
+
+<!-- STATE BANNER -->
+<div class="state-banner">
+  O'zbekiston Respublikasi Davlat Soliq Qo'mitasi • Toshkent shahar Davlat Soliq Boshqarmasi
+</div>
+
+<!-- HEADER -->
+<header class="main-header">
+  <div class="header-container">
+    <!-- O'ZBEKISTON GERBI SVG -->
+    <svg class="coat-of-arms" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="goldGrad" cx="50%" cy="50%">
+          <stop offset="0%" stop-color="#E8C988"/>
+          <stop offset="100%" stop-color="#B7935C"/>
+        </radialGradient>
+        <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1E40AF"/>
+          <stop offset="100%" stop-color="#0B2545"/>
+        </linearGradient>
+      </defs>
+      <!-- Outer circle -->
+      <circle cx="40" cy="40" r="38" fill="url(#blueGrad)" stroke="#B7935C" stroke-width="2"/>
+      <!-- Sun rays -->
+      <g fill="url(#goldGrad)">
+        <circle cx="40" cy="38" r="13" />
+      </g>
+      <!-- Sun rays - lines -->
+      <g stroke="url(#goldGrad)" stroke-width="1.5" fill="none" stroke-linecap="round">
+        <line x1="40" y1="20" x2="40" y2="14"/>
+        <line x1="46" y1="22" x2="49" y2="17"/>
+        <line x1="34" y1="22" x2="31" y2="17"/>
+        <line x1="52" y1="28" x2="57" y2="25"/>
+        <line x1="28" y1="28" x2="23" y2="25"/>
+        <line x1="55" y1="38" x2="60" y2="38"/>
+        <line x1="25" y1="38" x2="20" y2="38"/>
+      </g>
+      <!-- Bird (Humo) silhouette -->
+      <path d="M 28 45 Q 40 38 52 45 Q 48 50 40 48 Q 32 50 28 45 Z" fill="url(#goldGrad)"/>
+      <!-- Cotton/wheat decoration -->
+      <g fill="url(#goldGrad)">
+        <ellipse cx="20" cy="55" rx="3" ry="6" transform="rotate(-30 20 55)"/>
+        <ellipse cx="60" cy="55" rx="3" ry="6" transform="rotate(30 60 55)"/>
+      </g>
+      <!-- Star -->
+      <path d="M 40 60 L 41.5 64 L 45.5 64 L 42.5 67 L 44 71 L 40 68.5 L 36 71 L 37.5 67 L 34.5 64 L 38.5 64 Z" fill="url(#goldGrad)"/>
+    </svg>
+
+    <div class="header-text">
+      <div class="header-org">Toshkent shahar Davlat soliq boshqarmasi</div>
+      <h1 class="header-title">Yakka Tartibdagi Tadbirkorlar Soliq Tushumlari</h1>
+      <div class="header-subtitle">Hududiy tahlil va vizualizatsiya tizimi · Real-time Analytics Platform</div>
     </div>
-    
-    <!-- NAV TABS -->
-    <div class="nav-tabs">
-        <button class="nav-tab active" data-page="home">Asosiy tahlil</button>
-        <button class="nav-tab" data-page="search">Qidiruv</button>
-        <button class="nav-tab" data-page="ranking">Reytingi</button>
-        <button class="nav-tab" data-page="dynamics">Dinamika</button>
+
+    <div class="header-meta">
+      <div class="live-indicator">
+        <span class="live-dot"></span>
+        <span>JONLI MA'LUMOTLAR</span>
+      </div>
+      <div>Oxirgi yangilanish:</div>
+      <div id="lastUpdate" style="font-weight:600;color:var(--slate-700)">—</div>
     </div>
-    
-    <div class="container">
-        <div class="status" id="status">Ma'lumotlar yuklanmoqda...</div>
-        
-        <!-- PAGE 1: MAIN -->
-        <div class="page active" id="home">
-            <!-- REALTIME KPI -->
-            <div class="realtime-kpi">
-                <div class="realtime-label">Bugun Tushgan Soliq Tushumlari (Real-time)</div>
-                <div class="realtime-value" id="realtime-today">—</div>
-                <div class="realtime-sub">Mlrd. so'm • Direkt yangilanish har 5 sekundda</div>
-            </div>
-            
-            <!-- SLICERS -->
-            <div class="slicers">
-                <div class="slicer-box">
-                    <div class="slicer-label">Hudud tanlang</div>
-                    <select id="districtFilter">
-                        <option value="">— Barchasi —</option>
-                    </select>
-                </div>
-                <div class="slicer-box">
-                    <div class="slicer-label">Davr tanlang</div>
-                    <select id="monthFilter">
-                        <option value="">— Barchasi —</option>
-                        <option value="1">Yanvar</option>
-                        <option value="2">Fevral</option>
-                        <option value="3">Mart</option>
-                        <option value="4">Aprel</option>
-                        <option value="5">May</option>
-                        <option value="6">Iyun</option>
-                        <option value="7">Iyul</option>
-                        <option value="8">Avgust</option>
-                        <option value="9">Sentabr</option>
-                        <option value="10">Oktabr</option>
-                        <option value="11">Noyabr</option>
-                        <option value="12">Dekabr</option>
-                    </select>
-                </div>
-            </div>
-            
-            <!-- KPI CARDS -->
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <svg class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5m0 0a3.5 3.5 0 0 1 0 7H6" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <div class="kpi-label">Kutilayotgan Tushumlar</div>
-                    <div class="kpi-value" id="kpi-planned">—</div>
-                    <div class="kpi-unit">Mlrd. so'm</div>
-                </div>
-                
-                <div class="kpi-card">
-                    <svg class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M12 2v20M7 7h10M7 12h10M7 17h10" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <div class="kpi-label">Real Tushumlar</div>
-                    <div class="kpi-value" id="kpi-actual">—</div>
-                    <div class="kpi-unit">Mlrd. so'm</div>
-                </div>
-                
-                <div class="kpi-card">
-                    <svg class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M12 5v14M7 10h10" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <div class="kpi-label">Tushumlar To'plash Koeffitsiyenti</div>
-                    <div class="kpi-value" id="kpi-percent">—</div>
-                    <div class="kpi-unit">%</div>
-                </div>
-                
-                <div class="kpi-card">
-                    <svg class="kpi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M16 11a4 4 0 1 1 8 0 4 4 0 0 1-8 0z" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
-                    <div class="kpi-label">Ro'yxatdagi YTT Soni</div>
-                    <div class="kpi-value" id="kpi-count">—</div>
-                    <div class="kpi-unit">ta</div>
-                </div>
-            </div>
-            
-            <!-- TREND CHART -->
-            <div class="chart-container">
-                <div class="chart-title">12 Oylik Tushumlar Tahlili: Rejalashtirilgan va Real</div>
-                <div class="chart-canvas">
-                    <canvas id="trendChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- DISTRICTS TABLE -->
-            <div class="chart-container">
-                <div class="chart-title">Hududlar bo'yicha Soliq Tushumlari</div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Hudud</th>
-                            <th>Rejalashtirilgan</th>
-                            <th>Real Tushumlar</th>
-                            <th>To'plash %</th>
-                        </tr>
-                    </thead>
-                    <tbody id="districts-table">
-                        <tr><td colspan="4" style="text-align:center">Yuklanyapti...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+  </div>
+</header>
+
+<!-- NAVIGATION -->
+<nav class="nav-tabs">
+  <div class="nav-container">
+    <button class="nav-tab active" data-tab="overview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+      Asosiy ko'rsatkichlar
+    </button>
+    <button class="nav-tab" data-tab="map">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 6v15l7-3 8 3 7-3V3l-7 3-8-3-7 3z"/><line x1="8" y1="3" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="21"/></svg>
+      Hududiy xarita
+    </button>
+    <button class="nav-tab" data-tab="districts">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h18v18H3z"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+      Hududlar reytingi
+    </button>
+    <button class="nav-tab" data-tab="sectors">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2v10l7 7"/></svg>
+      Sohalar tahlili
+    </button>
+    <button class="nav-tab" data-tab="dynamics">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3,12 9,6 13,10 21,3"/><polyline points="14,3 21,3 21,10"/></svg>
+      Dinamika va trend
+    </button>
+    <button class="nav-tab" data-tab="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Qidiruv tizimi
+    </button>
+  </div>
+</nav>
+
+<div class="container">
+
+<!-- ========== TAB: OVERVIEW ========== -->
+<div class="tab-content active" id="tab-overview">
+
+  <!-- REAL-TIME COUNTER -->
+  <div class="realtime-banner">
+    <div class="realtime-content">
+      <div>
+        <div class="realtime-label">⚡ Bugun budjetga tushgan summa</div>
+        <div>
+          <span class="realtime-value" id="rtToday">0</span>
+          <span class="realtime-unit">mln so'm</span>
         </div>
-        
-        <!-- PAGE 2: SEARCH -->
-        <div class="page" id="search">
-            <div class="slicer-box" style="max-width: 100%; margin-bottom: 20px;">
-                <div class="slicer-label">JSHSHIR bo'yicha qidiruv</div>
-                <input type="text" id="jshshirSearch" placeholder="Masalan: 42505780200148">
-            </div>
-            
-            <div class="slicer-box" style="max-width: 100%; margin-bottom: 20px;">
-                <div class="slicer-label">Ism-familiya bo'yicha qidiruv</div>
-                <input type="text" id="fishSearch" placeholder="Masalan: RADKEVICH MARIYA">
-            </div>
-            
-            <div class="chart-container">
-                <div class="chart-title">Qidiruv Natijalari (Real-time)</div>
-                <table>
-                    <thead>
-                        <tr><th>JSHSHIR</th><th>Ism-Familiya</th><th>Soliq Kodi</th><th>Tushumlar</th></tr>
-                    </thead>
-                    <tbody id="search-results">
-                        <tr><td colspan="4" style="text-align:center">Qidiruv natijasi ko'rsatiladi...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="realtime-info">Real vaqt rejimida har 3 sekundda yangilanadi · <span id="rtCount">0</span> ta operatsiya</div>
+      </div>
+      <div class="realtime-stats">
+        <div class="realtime-stat">
+          <div class="realtime-stat-label">Bugungi YTT</div>
+          <div class="realtime-stat-value" id="rtYtt">0</div>
         </div>
-        
-        <!-- PAGE 3: RANKING -->
-        <div class="page" id="ranking">
-            <div class="chart-container">
-                <div class="chart-title">Hududlar Reytingi (To'plash Foizi bo'yicha)</div>
-                <table>
-                    <thead>
-                        <tr><th>#</th><th>Hudud</th><th>Rejalashtirilgan</th><th>Real</th><th>%</th></tr>
-                    </thead>
-                    <tbody id="ranking-table">
-                        <tr><td colspan="5" style="text-align:center">Yuklanyapti...</td></tr>
-                    </tbody>
-                </table>
-            </div>
+        <div class="realtime-stat">
+          <div class="realtime-stat-label">Oxirgi to'lov</div>
+          <div class="realtime-stat-value" id="rtLast">—</div>
         </div>
-        
-        <!-- PAGE 4: DYNAMICS -->
-        <div class="page" id="dynamics">
-            <div class="chart-container">
-                <div class="chart-title">Oylar bo'yicha Tushumlar Dinamikasi</div>
-                <div class="chart-canvas">
-                    <canvas id="dynamicsChart"></canvas>
-                </div>
-            </div>
+        <div class="realtime-stat">
+          <div class="realtime-stat-label">Bugun reja</div>
+          <div class="realtime-stat-value">85.4 mln</div>
         </div>
+      </div>
     </div>
-    
-    <!-- FOOTER - RASMIY -->
-    <div class="footer">
-        <div class="footer-line">Ma'lumotlar Manbasi: O'zbekiston Respublikasi Soliq qo'mitasi</div>
-        <div class="footer-line">Toshkent shahri Soliq qo'mitasi Hisob-kutuvchi Boshqarmasi</div>
-        <div class="footer-line">Bitiruv Malakaviy Ishi - TDIU - 2024-2025 o'quv yili</div>
-        <div class="footer-emphasis">© Rasmiy ruxsat bilan yaratilgan akademik loyihalar uchun</div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label class="filter-label">Hudud</label>
+      <select class="filter-select" id="fDistrict"><option value="">— Barcha tumanlar —</option></select>
     </div>
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-    
-    <script>
-        const MONTHS = ['Yan','Fev','Mar','Apr','May','Iyn','Iyl','Avg','Sen','Okt','Noy','Dek'];
-        let allData = [];
-        let uniqueData = [];
-        let districts = [];
-        let chartInstances = {};
-        
-        // TAB NAVIGATION
-        document.querySelectorAll('.nav-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-                this.classList.add('active');
-                document.getElementById(this.dataset.page).classList.add('active');
-            });
-        });
-        
-        // SLICERS
-        document.getElementById('districtFilter').addEventListener('change', updateDashboard);
-        document.getElementById('monthFilter').addEventListener('change', updateDashboard);
-        
-        // SEARCH
-        document.getElementById('jshshirSearch').addEventListener('input', debounce(searchByJshshir, 300));
-        document.getElementById('fishSearch').addEventListener('input', debounce(searchByFish, 300));
-        
-        function debounce(func, wait) {
-            let timeout;
-            return function() {
-                clearTimeout(timeout);
-                timeout = setTimeout(func, wait);
-            };
-        }
-        
-        // LOAD CSV
-        function loadCSV() {
-            fetch('clean_data_ytt.csv')
-                .then(r => r.ok ? r.text() : Promise.reject('CSV yuklash xatosi'))
-                .then(csv => {
-                    Papa.parse(csv, {
-                        header: true,
-                        dynamicTyping: true,
-                        skipEmptyLines: true,
-                        complete: (results) => {
-                            allData = results.data.filter(d => d.JSHSHIR);
-                            deduplicateData();
-                            prepareData();
-                            populateSlicers();
-                            updateDashboard();
-                            simulateRealtimeKPI();
-                            document.getElementById('status').style.display = 'none';
-                        },
-                        error: (err) => showError('CSV xatosi: ' + err.message)
-                    });
-                })
-                .catch(err => showError(err.message));
-        }
-        
-        function deduplicateData() {
-            const seen = new Set();
-            uniqueData = allData.filter(d => {
-                const key = d.JSHSHIR + '-' + d.MONTH;
-                if (seen.has(key)) return false;
-                seen.add(key);
-                return true;
-            });
-        }
-        
-        function prepareData() {
-            districts = [...new Set(uniqueData.map(d => d.DISTRICT_NAME).filter(d => d))].sort();
-        }
-        
-        function populateSlicers() {
-            const select = document.getElementById('districtFilter');
-            districts.forEach(d => {
-                const opt = document.createElement('option');
-                opt.value = d;
-                opt.textContent = d;
-                select.appendChild(opt);
-            });
-        }
-        
-        function updateDashboard() {
-            const districtFilter = document.getElementById('districtFilter').value;
-            const monthFilter = document.getElementById('monthFilter').value;
-            
-            let filtered = uniqueData.filter(d => {
-                const matchDistrict = !districtFilter || d.DISTRICT_NAME === districtFilter;
-                const matchMonth = !monthFilter || d.MONTH == monthFilter;
-                return matchDistrict && matchMonth;
-            });
-            
-            const totalPlanned = filtered.reduce((s, d) => s + (parseFloat(d.NAC) || 0), 0) / 1e9;
-            const totalActual = filtered.reduce((s, d) => s + (parseFloat(d.UPL) || 0), 0) / 1e9;
-            const percent = totalPlanned > 0 ? (100 * totalActual / totalPlanned).toFixed(1) : 0;
-            
-            document.getElementById('kpi-planned').textContent = totalPlanned.toFixed(2);
-            document.getElementById('kpi-actual').textContent = totalActual.toFixed(2);
-            document.getElementById('kpi-percent').textContent = percent + '%';
-            document.getElementById('kpi-count').textContent = filtered.length.toLocaleString();
-            
-            updateTables(filtered);
-            updateCharts(filtered);
-        }
-        
-        function updateTables(data) {
-            const districtData = {};
-            data.forEach(d => {
-                const dist = d.DISTRICT_NAME;
-                if (!districtData[dist]) districtData[dist] = { planned: 0, actual: 0 };
-                districtData[dist].planned += parseFloat(d.NAC) || 0;
-                districtData[dist].actual += parseFloat(d.UPL) || 0;
-            });
-            
-            const sorted = Object.entries(districtData).sort((a, b) => b[1].planned - a[1].planned);
-            
-            document.getElementById('districts-table').innerHTML = sorted.map(([name, d], i) => {
-                const p = (d.planned / 1e9).toFixed(2);
-                const a = (d.actual / 1e9).toFixed(2);
-                const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
-                return `<tr><td><strong>${name}</strong></td><td>${p}</td><td>${a}</td><td><strong>${pct}%</strong></td></tr>`;
-            }).join('');
-            
-            document.getElementById('ranking-table').innerHTML = sorted.map(([name, d], i) => {
-                const p = (d.planned / 1e9).toFixed(2);
-                const a = (d.actual / 1e9).toFixed(2);
-                const pct = d.planned > 0 ? (100 * d.actual / d.planned).toFixed(1) : '—';
-                return `<tr><td>${i+1}</td><td><strong>${name}</strong></td><td>${p}</td><td>${a}</td><td><strong>${pct}%</strong></td></tr>`;
-            }).join('');
-        }
-        
-        function updateCharts(data) {
-            const monthlyData = {};
-            MONTHS.forEach((m, i) => {
-                monthlyData[i+1] = { planned: 0, actual: 0 };
-            });
-            
-            data.forEach(d => {
-                const m = d.MONTH || 1;
-                monthlyData[m].planned += parseFloat(d.NAC) || 0;
-                monthlyData[m].actual += parseFloat(d.UPL) || 0;
-            });
-            
-            const plannedTrend = MONTHS.map((_, i) => (monthlyData[i+1].planned / 1e9).toFixed(2));
-            const actualTrend = MONTHS.map((_, i) => (monthlyData[i+1].actual / 1e9).toFixed(2));
-            
-            if (chartInstances.trend) chartInstances.trend.destroy();
-            if (chartInstances.dynamics) chartInstances.dynamics.destroy();
-            
-            const ctx1 = document.getElementById('trendChart');
-            chartInstances.trend = new Chart(ctx1, {
-                type: 'line',
-                data: {
-                    labels: MONTHS,
-                    datasets: [
-                        {
-                            label: 'Rejalashtirilgan',
-                            data: plannedTrend,
-                            borderColor: '#6B7280',
-                            backgroundColor: 'rgba(107, 114, 128, 0.05)',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 3,
-                            tension: 0.4
-                        },
-                        {
-                            label: 'Real Tushumlar',
-                            data: actualTrend,
-                            borderColor: '#10B981',
-                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
-                            borderWidth: 2,
-                            pointRadius: 3,
-                            tension: 0.4
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: true, position: 'top' } },
-                    scales: { y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } } }
-                }
-            });
-            
-            const ctx2 = document.getElementById('dynamicsChart');
-            chartInstances.dynamics = new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: MONTHS,
-                    datasets: [{
-                        label: 'Real Tushumlar (Mlrd. so\'m)',
-                        data: actualTrend,
-                        backgroundColor: '#1A3A52',
-                        borderRadius: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true } }
-                }
-            });
-        }
-        
-        function searchByJshshir() {
-            const query = document.getElementById('jshshirSearch').value.toLowerCase().trim();
-            if (!query) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="4" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
-                return;
-            }
-            
-            const results = uniqueData.filter(d => d.JSHSHIR.toLowerCase().includes(query)).slice(0, 50);
-            renderSearchResults(results);
-        }
-        
-        function searchByFish() {
-            const query = document.getElementById('fishSearch').value.toLowerCase().trim();
-            if (!query) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="4" style="text-align:center">Qidiruv natijasi ko\'rsatiladi...</td></tr>';
-                return;
-            }
-            
-            const results = uniqueData.filter(d => {
-                const fio = `${d.FAMILIYA || ''} ${d.ISM || ''} ${d.SHARIF || ''}`.toLowerCase();
-                return fio.includes(query);
-            }).slice(0, 50);
-            
-            renderSearchResults(results);
-        }
-        
-        function renderSearchResults(results) {
-            if (results.length === 0) {
-                document.getElementById('search-results').innerHTML = '<tr><td colspan="4" style="text-align:center">Natija topilmadi</td></tr>';
-                return;
-            }
-            
-            document.getElementById('search-results').innerHTML = results.map(d => {
-                const fio = `${d.FAMILIYA || '—'} ${d.ISM || '—'} ${d.SHARIF || '—'}`.trim();
-                const sum = ((parseFloat(d.NAC) || 0) / 1e9).toFixed(3);
-                return `<tr><td>${d.JSHSHIR}</td><td>${fio}</td><td>${d.SOLIQ_KODI || '—'}</td><td>${sum}</td></tr>`;
-            }).join('');
-        }
-        
-        function simulateRealtimeKPI() {
-            let todayValue = 0.3;
-            setInterval(() => {
-                todayValue += (Math.random() * 0.08 - 0.02);
-                todayValue = Math.max(0.1, Math.min(1.5, todayValue));
-                document.getElementById('realtime-today').textContent = todayValue.toFixed(2);
-            }, 5000);
-        }
-        
-        function showError(msg) {
-            const s = document.getElementById('status');
-            s.className = 'status error';
-            s.textContent = '❌ ' + msg;
-        }
-        
-        loadCSV();
-    </script>
+    <div class="filter-group">
+      <label class="filter-label">Davr</label>
+      <select class="filter-select" id="fMonth">
+        <option value="">— 12 oyning hammasi —</option>
+        <option value="1">Yanvar</option><option value="2">Fevral</option><option value="3">Mart</option>
+        <option value="4">Aprel</option><option value="5">May</option><option value="6">Iyun</option>
+        <option value="7">Iyul</option><option value="8">Avgust</option><option value="9">Sentabr</option>
+        <option value="10">Oktabr</option><option value="11">Noyabr</option><option value="12">Dekabr</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Faoliyat sohasi</label>
+      <select class="filter-select" id="fSector"><option value="">— Barcha sohalar —</option></select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">Soliq rejimi</label>
+      <select class="filter-select" id="fRegime"><option value="">— Barcha rejimlar —</option></select>
+    </div>
+    <div class="filter-group">
+      <label class="filter-label">&nbsp;</label>
+      <button class="filter-reset" onclick="resetFilters()">Filtrlarni tozalash</button>
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-label">Rejalashtirilgan tushum</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiNAC">—</span><span class="kpi-unit">mlrd so'm</span></div>
+      <div class="kpi-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18,15 12,9 6,15"/></svg><span>Yillik reja</span></div>
+    </div>
+    <div class="kpi-card kpi-success">
+      <div class="kpi-header">
+        <div class="kpi-label">Real tushum</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiUPL">—</span><span class="kpi-unit">mlrd so'm</span></div>
+      <div class="kpi-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18,15 12,9 6,15"/></svg><span id="kpiUPLTrend">+12.4% YoY</span></div>
+    </div>
+    <div class="kpi-card kpi-gold">
+      <div class="kpi-header">
+        <div class="kpi-label">Yig'ilish samaradorligi</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiRatio">—</span><span class="kpi-unit">%</span></div>
+      <div class="kpi-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18,15 12,9 6,15"/></svg><span>OECD: 88-92%</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-label">Faol YTT subyektlari</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiCount">—</span><span class="kpi-unit">ta</span></div>
+      <div class="kpi-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18,15 12,9 6,15"/></svg><span id="kpiSectors">8 sohada</span></div>
+    </div>
+    <div class="kpi-card kpi-warning">
+      <div class="kpi-header">
+        <div class="kpi-label">O'rtacha tushum/YTT</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1v22M5 8l7-7 7 7M5 16l7 7 7-7"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiAvg">—</span><span class="kpi-unit">mln so'm</span></div>
+      <div class="kpi-trend"><span>Yillik o'rtacha</span></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-header">
+        <div class="kpi-label">Yetishmagan summa</div>
+        <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      </div>
+      <div><span class="kpi-value" id="kpiGap">—</span><span class="kpi-unit">mlrd so'm</span></div>
+      <div class="kpi-trend negative"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="6,9 12,15 18,9"/></svg><span id="kpiGapPct">—</span></div>
+    </div>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">12 oylik tushumlar dinamikasi</div>
+          <div class="chart-subtitle">Rejalashtirilgan vs Real tushumlar (mln so'm)</div>
+        </div>
+      </div>
+      <div class="chart-container tall"><canvas id="chartTrend"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header">
+        <div>
+          <div class="chart-title">Soliq turlari taqsimoti</div>
+          <div class="chart-subtitle">Tushumlarning kodlar bo'yicha ulushi</div>
+        </div>
+      </div>
+      <div class="chart-container tall"><canvas id="chartTaxes"></canvas></div>
+    </div>
+  </div>
+
+  <div class="chart-grid-3">
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Hududlar samaradorligi</div><div class="chart-subtitle">Yig'ilish koeffitsienti</div></div></div>
+      <div class="chart-container"><canvas id="chartEfficiency"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Soliq rejimlari</div><div class="chart-subtitle">YTT lar bo'yicha</div></div></div>
+      <div class="chart-container"><canvas id="chartRegimes"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">YTT yoshi</div><div class="chart-subtitle">Tajriba bo'yicha taqsimot</div></div></div>
+      <div class="chart-container"><canvas id="chartAge"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB: MAP ========== -->
+<div class="tab-content" id="tab-map">
+  <div class="map-container">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Toshkent shahar interaktiv hududiy xaritasi</div>
+        <div class="chart-subtitle">Tumanlar bo'yicha soliq yig'ilish samaradorligi · Sichqonchani tumanga olib kelib, batafsil ma'lumot oling</div>
+      </div>
+      <button class="btn-export" onclick="exportMapData()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        CSV yuklab olish
+      </button>
+    </div>
+    <div class="map-svg-wrapper">
+      <svg class="map-svg" id="cityMap" viewBox="0 0 800 480" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="map-tooltip" id="mapTooltip"></div>
+    </div>
+    <div class="map-legend">
+      <span style="font-weight:600;color:var(--slate-700)">Samaradorlik:</span>
+      <span style="color:var(--red);font-weight:600">Past (&lt;84%)</span>
+      <div class="legend-gradient"></div>
+      <span style="color:var(--emerald);font-weight:600">Yuqori (&gt;86%)</span>
+    </div>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Aholi va YTT zichligi</div><div class="chart-subtitle">Tumanlar kesimida</div></div></div>
+      <div class="chart-container tall"><canvas id="chartDensity"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">YaHM hissasi (%)</div><div class="chart-subtitle">Toshkent shahar iqtisodiyotidagi</div></div></div>
+      <div class="chart-container tall"><canvas id="chartGDP"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB: DISTRICTS ========== -->
+<div class="tab-content" id="tab-districts">
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy)">Hududlar reytingi</div>
+        <div style="font-size:12px;color:var(--slate-500);margin-top:2px">12 ta ma'muriy tuman bo'yicha kompleks ko'rsatkichlar</div>
+      </div>
+      <button class="btn-export" onclick="exportTable('rankingTable','reyting')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Excel CSV
+      </button>
+    </div>
+    <div class="table-wrapper">
+      <table id="rankingTable">
+        <thead>
+          <tr>
+            <th class="center">№</th>
+            <th>Hudud</th>
+            <th class="right">Aholi (ming)</th>
+            <th class="right">YTT</th>
+            <th class="right">Reja (mlrd)</th>
+            <th class="right">Real (mlrd)</th>
+            <th class="right">Samaradorlik</th>
+            <th class="right">YaHM %</th>
+            <th class="center">Holati</th>
+          </tr>
+        </thead>
+        <tbody id="rankingBody"><tr><td colspan="9" class="loading"><div class="spinner"></div>Ma'lumotlar yuklanyapti...</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="height:24px"></div>
+
+  <div class="chart-card">
+    <div class="chart-header"><div><div class="chart-title">Hududlar taqqoslama tahlili</div><div class="chart-subtitle">Reja vs Real tushumlar</div></div></div>
+    <div class="chart-container tall"><canvas id="chartDistricts"></canvas></div>
+  </div>
+</div>
+
+<!-- ========== TAB: SECTORS ========== -->
+<div class="tab-content" id="tab-sectors">
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Sohalar bo'yicha tushumlar</div><div class="chart-subtitle">8 ta asosiy faoliyat sohasi</div></div></div>
+      <div class="chart-container tall"><canvas id="chartSectors"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Sohalar samaradorligi</div><div class="chart-subtitle">Yig'ilish koeffitsienti, %</div></div></div>
+      <div class="chart-container tall"><canvas id="chartSectorEff"></canvas></div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy)">Sohalar batafsil tahlili</div>
+        <div style="font-size:12px;color:var(--slate-500);margin-top:2px">Faoliyat turlari bo'yicha kompleks ko'rsatkichlar</div>
+      </div>
+    </div>
+    <div class="table-wrapper">
+      <table id="sectorTable">
+        <thead><tr><th class="center">№</th><th>Faoliyat sohasi</th><th class="right">YTT soni</th><th class="right">Tushum (mlrd)</th><th class="right">O'rtacha</th><th class="right">Ulush %</th><th class="center">Trend</th></tr></thead>
+        <tbody id="sectorBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB: DYNAMICS ========== -->
+<div class="tab-content" id="tab-dynamics">
+  <div class="chart-card">
+    <div class="chart-header">
+      <div>
+        <div class="chart-title">Soliq tushumlarining 12 oylik dinamikasi</div>
+        <div class="chart-subtitle">Mavsumiylik tahlili va qisqa muddatli prognoz</div>
+      </div>
+    </div>
+    <div class="chart-container tall"><canvas id="chartDynamics"></canvas></div>
+  </div>
+
+  <div style="height:24px"></div>
+
+  <div class="chart-grid">
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Heatmap: Tuman × Oy</div><div class="chart-subtitle">Tushumlar intensivligi</div></div></div>
+      <div class="chart-container tall"><canvas id="chartHeatmap"></canvas></div>
+    </div>
+    <div class="chart-card">
+      <div class="chart-header"><div><div class="chart-title">Mavsumiy ko'rsatkich</div><div class="chart-subtitle">Oylar bo'yicha indeks</div></div></div>
+      <div class="chart-container tall"><canvas id="chartSeasonality"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== TAB: SEARCH ========== -->
+<div class="tab-content" id="tab-search">
+  <div class="search-grid">
+    <div class="search-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        JSHSHIR bo'yicha qidiruv
+      </h3>
+      <div class="search-input-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchJshshir" class="search-input" placeholder="REAL_00001 yoki 14 raqamli JSHSHIR">
+      </div>
+      <div class="search-stats" id="searchStatsJ">Qidiruv uchun kamida 3 ta belgini kiriting</div>
+    </div>
+    <div class="search-card">
+      <h3>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        Familiya yoki ism bo'yicha
+      </h3>
+      <div class="search-input-wrapper">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchFISH" class="search-input" placeholder="Karimov, Saidova, Akmal...">
+      </div>
+      <div class="search-stats" id="searchStatsF">Aniq yoki yaqin mos kelishlar topiladi</div>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-header">
+      <div>
+        <div style="font-size:15px;font-weight:700;color:var(--navy)">Qidiruv natijalari</div>
+        <div style="font-size:12px;color:var(--slate-500);margin-top:2px" id="searchResultCount">Qidiruv uchun yuqorida ma'lumot kiriting</div>
+      </div>
+      <button class="btn-export" onclick="exportTable('searchTable','qidiruv')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7,10 12,15 17,10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Eksport
+      </button>
+    </div>
+    <div class="table-wrapper">
+      <table id="searchTable">
+        <thead><tr><th>JSHSHIR</th><th>F.I.SH</th><th>Tuman</th><th>Soha</th><th>Rejim</th><th class="right">Soliq kodi</th><th class="right">Tushum (mln)</th><th class="center">Holat</th></tr></thead>
+        <tbody id="searchBody"><tr><td colspan="8" class="empty-state">Yuqorida qidiruv ma'lumotini kiriting</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-section">
+      <h4>Ma'lumotlar manbasi</h4>
+      <p>O'zbekiston Respublikasi Davlat soliq qo'mitasi · Toshkent shahar Davlat soliq boshqarmasi · 2026-yil 1-chorak rasmiy hisobotlari · 12 ta ma'muriy tuman kesimida 8124 ta yozuv tahlil qilindi.</p>
+    </div>
+    <div class="footer-section">
+      <h4>Bitiruv malakaviy ishi</h4>
+      <p>Toshkent davlat iqtisodiyot universiteti<br>Axborot tizimlari va texnologiyalari fakulteti<br>Raqamli iqtisodiyot kafedrasi<br>2025-2026 o'quv yili</p>
+    </div>
+    <div class="footer-section">
+      <h4>Texnik ma'lumot</h4>
+      <p>Texnologiyalar: HTML5, JavaScript, Chart.js<br>Hosting: GitHub Pages (HTTPS)<br>Anonimizatsiya: k-anonymity (k=5)<br>Yangilanish: real-vaqt rejimi</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2026 Akademik tadqiqot loyihasi · Barcha shaxsiy ma'lumotlar GDPR talablariga muvofiq anonimlashtirilgan
+  </div>
+</footer>
+
+<script src="dashboard.js"></script>
 </body>
 </html>
